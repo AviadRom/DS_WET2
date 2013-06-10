@@ -48,7 +48,7 @@ public:
 	}
     
 	void print(){
-		cout<<"id:"<< Id <<"  p.Temp: "<< priority <<endl;
+		cout<<"id:"<< Id <<"  priority: "<< priority <<endl;
 	}
 };
 
@@ -80,8 +80,8 @@ public:
 		return;
 	}
 	int compareById(const TaskPriority& a,const TaskPriority& b) const{
-		if (getId(a)>getId(b)) return 1;
-		if (getId(a)<getId(b)) return -1;
+		if (GetId(a)>GetId(b)) return 1;
+		if (GetId(a)<GetId(b)) return -1;
 		return 0;
 	}
 };

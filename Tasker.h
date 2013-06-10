@@ -13,10 +13,14 @@
 #include "Task.h"
 #include "HashTable.h"
 #include "Heap.h"
+#include "AVLTree.h"
 
 class Tasker{
 private:
-    HashTable IdHash;
+    HashTable<typename T, typename CmpFunc, typename helpFunc> IdHash;
+    Heap<typename T,typename FuncObj> MinHeap;
+    Heap<typename T,typename FuncObj> MaxHeap;
+    
     /*Data holders*/
     //max heap with priority key
     //min heap with priority key
