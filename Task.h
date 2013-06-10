@@ -79,7 +79,7 @@ public:
 		a.SetPriority(val);
 		return;
 	}
-	int compareById(const RequestPriority& a,const RequestPriority& b) const{
+	int compareById(const TaskPriority& a,const TaskPriority& b) const{
 		if (getId(a)>getId(b)) return 1;
 		if (getId(a)<getId(b)) return -1;
 		return 0;

@@ -11,9 +11,12 @@
 #include <iostream>
 #include "library2.h"
 #include "Task.h"
+#include "HashTable.h"
+#include "Heap.h"
 
 class Tasker{
 private:
+    HashTable IdHash;
     /*Data holders*/
     //max heap with priority key
     //min heap with priority key
