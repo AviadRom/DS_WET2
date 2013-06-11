@@ -8,8 +8,8 @@
 
 
 
-#include "library2.h";
-#include "Tasker.h";
+#include "library2.h"
+#include "Tasker.h"
 
 
 void* Init(){
