@@ -2,8 +2,7 @@
 //  Tasker.h
 //  DS-WET2
 //
-//  Created by Aviad Rom on 6/2/13.
-//  Copyright (c) 2013 Aviad Rom. All rights reserved.
+//  Aviad Rom and Ohad Fireman
 //
 
 #ifndef DS_WET2_Tasker_h
@@ -15,31 +14,38 @@
 #include "Heap.h"
 #include "AVLTree.h"
 
+typedef HashTable<Task*, TaskCmp, TaskFunctions> TaskHash;
+typedef Heap<Task, TaskFunctions> MaxHeap;
+typedef Heap<Task, TaskFunctionsForMinHeap> MinHeap;
+
 class Tasker{
 private:
-    HashTable<typename T, typename CmpFunc, typename helpFunc> IdHash;
-    Heap<typename T,typename FuncObj> MinHeap;
-    Heap<typename T,typename FuncObj> MaxHeap;
-    
-    /*Data holders*/
-    //max heap with priority key
-    //min heap with priority key
-    //hash table with ID key
+    TaskHash IdHash;
+    MinHeap MinPriHeap;
+    MaxHeap MaxPriHeap;
+    int NumberOfTasks;
 public:
-    Tasker (int size = 0, int[] taskIDs = NULL, int[] taskPriorities = NULL){
-        //initialize hash table and heaps
+    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size){
     }
     /*Get&Set methods for any relevant class property*/
     
     StatusType AddTask(int taskID, int priority){
-        if (HashTable.IsIn(taksID)){
+
+   /*     if (IdHash.IsIn(taskID)){
             return FAILURE;
-        }
-        try {
-            //add task to hash table and heaps.
+        }*/
+    /*    try {
+        	Task task(taskID,priority);
+        	HashResult result=IdHash.Insert(task);
+        	if (result == HASH_TABLE_DATA_ALREADY_EXIST){
+        		return FAILURE;
+        	}
+        	MaxPriHeap.Insert(task);
+        	MinPriHeap.Insert(task);
+
         } catch (bad_alloc& b){
             return ALLOCATION_ERROR;
-        }
+        }*/
         return SUCCESS;
     }
     
@@ -55,9 +61,9 @@ public:
     }
     
     StatusType SetPriority (int taskID,int priority){
-        if (!HashTable.IsIn(taksID)){
+       /* if (!IdHash.IsIn(taskID)){
             return FAILURE;
-        }
+        }*/
         //1. get task from hash table
         //2. change priority
         //3. sift-down fixes to the heaps if neccessary.
@@ -65,9 +71,9 @@ public:
     }
     
     StatusType Cancel (int taskID){
-        if (!HashTable.IsIn(taksID)){
+     /*   if (!IdHash.IsIn(taskID)){
             return FAILURE;
-        }
+        }*/
         // get task
         // remove from heaps and fix them
         // remove from hash table
@@ -79,22 +85,22 @@ public:
             return INVALID_INPUT;
         }
         //get min-heap root
-        Task tmp = MinHeap.GetRoot();
-        *taskID = tmp.GetID();
+        Task tmp = MinPriHeap.FindMax();//should change to the right heap function
+        *taskID = tmp.GetId();
         *priority = tmp.GetPriority();
         return SUCCESS;
     }
-
+    
     StatusType GetKthTask(int k, int* taskID, int* priority){
-        if (taskID == NULL || priority == NULL || k > HashTable.GetNumOfElements() || k < 1){
+/*        if (taskID == NULL || priority == NULL || k > IdHash.GetNumOfElements() || k < 1){
             return INVALID_INPUT;
-        }
+        }*/
         // DO MAGIC
         return SUCCESS;
     }
     
     ~Tasker(){}
-}
+};
 
 
 #endif

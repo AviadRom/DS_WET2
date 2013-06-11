@@ -6,84 +6,110 @@
 
 #ifndef DS_WET2_Task_h
 #define DS_WET2_Task_h
+#include <iostream>
+using std::cout;
+using std::endl;
 
 class Task{
-protected:
-	int Id;
-public:
-	Task(int ID):Id(ID){};
-	
-    Task(const Task& b): Id(b.Id){};
-	
-    virtual ~Task(){};
-	
-    int GetId() const{
-		return Id;
-	}
-	bool Compare(const Task& b) const{
-		return (Id == b.Id);
-	}
-};
-
-class TaskPriority: public Task{
 private:
+	int Id;
 	int Priority;
 public:
-	TaskPriority(int ID,int priority):Task(ID),Priority(priority){};
-    
-	TaskPriority(const TaskPriority& b): Task(b),Priority(b.Priority){};
-    
-	TaskPriority& operator=(const TaskPriority& b){
-		Priority = b.Priority;
-		Id=b.Id;
+	Task(int ID = 0, int priority = 0):Id(ID),Priority(priority){};
+	
+	Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()){};
+	
+	~Task(){};
+	
+	int GetId() const{
+		return Id;
+	}
+	
+	bool Compare(const Task& b) const{
+		return (Id == b.GetId());
+	}
+	
+	Task& operator=(const Task& b){
+		Priority = b.GetPriority();
+		Id = b.GetId();
 		return *this;
 	}
-	~TaskPriority(){};
-    
+	
 	int GetPriority() const{
 		return Priority;
 	}
 	void SetPriority(int val){
 		Priority = val;
 	}
-    
+	
 	void print(){
-		cout<<"id:"<< Id <<"  priority: "<< priority <<endl;
+		cout<<"id:"<< Id <<"  Priority: "<< Priority <<endl;
 	}
 };
+
 
 
 class TaskCmp{
 public:
 	bool operator()(const Task& a,const Task& b) const{
-		return a.compare(b);
+		return a.Compare(b);
 	}
 };
 
 class TaskGetId{
 public:
-	int operator()(const Request& a) const{
-		return a.getId();
+	int operator()(const Task& a) const{
+		return a.GetId();
 	}
 };
 
-class TaskPriorityFunctions{
+class TaskFunctions{
 public:
-	int GetId (const TaskPriority& a) const{
+	int GetId (const Task& a) const{
 		return a.GetId();
 	}
-	int GetVal(const TaskPriority& a) const{
+	int GetVal(const Task& a) const{
 		return a.GetPriority();
 	}
-	void SetVal(TaskPriority& a, int val){
+	void SetVal(Task& a, int val){
 		a.SetPriority(val);
 		return;
 	}
-	int compareById(const TaskPriority& a,const TaskPriority& b) const{
-		if (GetId(a)>GetId(b)) return 1;
-		if (GetId(a)<GetId(b)) return -1;
+	int compareById(const Task& a,const Task& b) const{
+		if (GetId(a) > GetId(b)){
+			return 1;
+		} 
+		if (GetId(a) < GetId(b)){ 
+			return -1;
+		}
 		return 0;
 	}
+};
+
+//This class is exactly like TaskFunctions but the comparison by ID
+//returns oposite values in order to use Heap as a min heap.
+class TaskFunctionsForMinHeap{
+public:
+	int GetId (const Task& a) const{
+		return a.GetId();
+	}
+	int GetVal(const Task& a) const{
+		return a.GetPriority();
+	}
+	void SetVal(Task& a, int val){
+		a.SetPriority(val);
+		return;
+	}
+	int compareById(const Task& a,const Task& b) const{
+		if (GetId(a) > GetId(b)){
+			return -1;
+		}
+		if (GetId(a) < GetId(b)){
+			return 1;
+		}
+		return 0;
+	}
+    
 };
 
 
