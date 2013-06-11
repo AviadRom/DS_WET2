@@ -54,28 +54,28 @@ public:
 
 class TaskGetId{
 public:
-	int operator()(const Request& a) const{
+	int operator()(const Task& a) const{
 		return a.GetId();
 	}
 };
 
 class TaskFunctions{
 public:
-	int GetId (const TaskPriority& a) const{
+	int GetId (const Task& a) const{
 		return a.GetId();
 	}
-	int GetVal(const TaskPriority& a) const{
+	int GetVal(const Task& a) const{
 		return a.GetPriority();
 	}
-	void SetVal(TaskPriority& a, int val){
+	void SetVal(Task& a, int val){
 		a.SetPriority(val);
 		return;
 	}
-	int compareById(const TaskPriority& a,const TaskPriority& b) const{
+	int compareById(const Task& a,const Task& b) const{
 		if (GetId(a) > GetId(b)){
 			return 1;
 		} 
-		if (GetId(a)<GetId(b)){ 
+		if (GetId(a) < GetId(b)){ 
 			return -1;
 		}
 		return 0;
