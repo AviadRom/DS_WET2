@@ -82,6 +82,32 @@ public:
 	}
 };
 
+//This class is exactly like TaskFunctions but the comparison by ID
+//returns oposite values in order to use Heap as a min heap.
+class TaskFunctionsForMinHeap{
+public:
+	int GetId (const Task& a) const{
+		return a.GetId();
+	}
+	int GetVal(const Task& a) const{
+		return a.GetPriority();
+	}
+	void SetVal(Task& a, int val){
+		a.SetPriority(val);
+		return;
+	}
+	int compareById(const Task& a,const Task& b) const{
+		if (GetId(a) > GetId(b)){
+			return -1;
+		}
+		if (GetId(a) < GetId(b)){
+			return 1;
+		}
+		return 0;
+	}
+    
+};
+
 
 
 #endif
