@@ -31,11 +31,19 @@ public:
     /*Get&Set methods for any relevant class property*/
     
     StatusType AddTask(int taskID, int priority){
-        if (HashTable.IsIn(taksID)){
+
+   /*     if (IdHash.IsIn(taskID)){
             return FAILURE;
-        }
+        }*/
         try {
-            //add task to hash table and heaps.
+        	Task task(taskID,priority);
+        	HashResult result=IdHash.Insert(task);
+        	if (result == HASH_TABLE_DATA_ALREADY_EXIST){
+        		return FAILURE;
+        	}
+        	MaxHeap.InsertElement(task);
+        	MinHeap.InsertElement(task);
+
         } catch (bad_alloc& b){
             return ALLOCATION_ERROR;
         }
