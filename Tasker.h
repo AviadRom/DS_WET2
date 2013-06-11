@@ -25,7 +25,7 @@ private:
     MaxHeap MaxPriHeap;
     int NumberOfTasks;
 public:
-    Tasker (int size = 0, int[] taskIDs = NULL, int[] taskPriorities = NULL){
+    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL){
         //initialize hash table and heaps
     }
     /*Get&Set methods for any relevant class property*/
