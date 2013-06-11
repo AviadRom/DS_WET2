@@ -15,13 +15,13 @@ template<typename T,typename FuncObj>
 class Heap{
 private:
 	int size;
-	int elements;
+	int index;
 	T* array;
 	FuncObj FObj;
     
-	/*Swap 2 elements in the array*/
-	void SwapNotChangeIndex(int i,int j){
-		if((i>0 && i<=elements)&&(j>0 && j<=elements)){
+	/*Replace 2 elements in the array*/
+	void SwapWithoutIndexChange(int i,int j){
+		if((i>0 && i<=index)&&(j>0 && j<=index)){
 			T temp=array[i];
 			array[i]=array[j];
 			array[j]=temp;
@@ -30,19 +30,19 @@ private:
 	}
     
 	/*Adds element to the Heap*/
-	void InsertNotChangeIndex(T data){
-		array[elements+1]=data;
-		elements++;
-		SiftUp(elements,false);
-		Resize();
+	void InsertWithoutIndexChange(T data){
+		array[index+1]=data;
+		index++;
+		MakeSiftUp(index,false);
+		ChangeSize();
 	}
     
 	/*Delete the biggest element at the Heap*/
-	T DelMaxNotChangeIndex(){
+	T RemoveMaxWithoutIndexChange(){
 		T ret = array[1];
-		SwapNotChangeIndex(1,elements);
-		elements--;
-		SiftDown(1,false);
+		SwapWithoutIndexChange(1,index);
+		index--;
+		MakeSiftDown(1,false);
 		return ret;
 	}
     
@@ -53,7 +53,7 @@ private:
 	 *
 	 *  Input: i,j - 2 of the array's indexes should be swapped*/
 	void Swap(int i,int j){
-		if((i>0 && i<=elements)&&(j>0 && j<=elements)){
+		if((i>0 && i<=index)&&(j>0 && j<=index)){
             
 			FObj.changeIndex(array[i],j);
 			FObj.changeIndex(array[j],i);
@@ -66,11 +66,11 @@ private:
     
 	/*  Sift down the element in the array at index i
 	 *  Input: i - the index where the data to sift down*/
-	void SiftDown(int i,bool changeIndex){
+	void MakeSiftDown(int i,bool changeIndex){
 		if(i<1){
 			return ;
 		}
-		if(2*i+1<=elements){
+		if(2*i+1<=index){
 			if(FObj.compare(array[2*i],array[i]) || FObj.compare(array[2*i+1],array[i])){
                 if(FObj.compare(array[2*i],array[2*i+1])){
                     if(changeIndex){
@@ -78,7 +78,7 @@ private:
                     }else{
                         SwapNotChangeIndex(i,2*i);
                     }
-                    SiftDown(2*i,changeIndex);
+                    MakeSiftDown(2*i,changeIndex);
                 }
                 else{
                     if(changeIndex){
@@ -87,11 +87,11 @@ private:
                         SwapNotChangeIndex(i,2*i+1);
                     }
                     
-                    SiftDown(2*i+1,changeIndex);
+                    MakeSiftDown(2*i+1,changeIndex);
                 }
 			}
 		}
-		else if(2*i<=elements){
+		else if(2*i<=index){
 			if(FObj.compare(array[2*i],array[i])){
 				if(changeIndex){
 					Swap(i,2*i);
@@ -104,8 +104,8 @@ private:
     
     /*  Sift up the element in the array at index i
 	 *  Input: i - the index where the data to sift up*/
-	void SiftUp(int i,bool changeIndex){
-		if((i<2)||(i>elements)){
+	void MakeSiftUp(int i,bool changeIndex){
+		if((i<2)||(i>index)){
 			return;
 		}
 		if(FObj.compare(array[i],array[i/2])){
@@ -114,18 +114,18 @@ private:
 			}else{
 				SwapNotChangeIndex(i,i/2);
 			}
-			SiftUp(i/2,changeIndex);
+			MakeSiftUp(i/2,changeIndex);
 		}
 	}
     
 	/*doing a standard  3/4 resize for a dynamic array.*/
-	void Resize(){
-		double factorSize=(double)elements/size;
+	void ChangeSize(){
+		double factorSize=(double)index/size;
 		if(factorSize>=0.75){
 			size*=2;
 			T* temp=array;
 			array=new T[size];
-			for(int i=1; i<=elements; i++){
+			for(int i=1; i<=index; i++){
 				array[i]=temp[i];
 			}
 			delete[] temp;
@@ -134,10 +134,10 @@ private:
     
 public:
 	/*Default c'tor*/
-	Heap():size(0),elements(0),array(NULL){}
+	Heap():size(0),index(0),array(NULL){}
     
 	/*c'tor*/
-	Heap(int n):size(2*n+1),elements(0){
+	Heap(int n):size(2*n+1),index(0){
 		if(n==0){
 			size=4;
 		}
@@ -152,14 +152,14 @@ public:
 		else{
 			size=2*n;
 		}
-		elements=n;
+		index=n;
 		array=new T[size];
-		for(int i=1;i<=elements;i++){
+		for(int i=1;i<=index;i++){
 			FObj.changeIndex(myArray[i-1],i);
 			array[i]=myArray[i-1];
 		}
-		for(int i=elements/2;i>0;--i){
-			SiftDown(i,true);
+		for(int i=index/2;i>0;--i){
+			MakeSiftDown(i,true);
 		}
 	}
     
@@ -171,16 +171,16 @@ public:
     /*  Change a key or any other data (of type int) in an object at the index i
 	 *  Input: i - the index where the object to change
 	 *  	   change - how big is the change*/
-	void ChangeKey(int i,int change){
-		if((i<1)||(i>elements)){
+	void ChangeKeyValue(int i,int change){
+		if((i<1)||(i>index)){
 			return;
 		}
 		FObj.AddVal(array[i],change);
 		if(change>=0){
-		    SiftUp(i,true);
+		    MakeSiftUp(i,true);
 		}
 		else{
-			SiftDown(i,true);
+			MakeSiftDown(i,true);
 		}
 	}
     
@@ -189,32 +189,32 @@ public:
     
     /*  return the object with the maximum value and remove it from the heap.
 	 *  after this operation the maximum object will be the next biggest value in the heap.*/
-	T DelMax(){
+	T DeleteMax(){
 		T ret = array[1];
-		Swap(1,elements);
-		elements--;
-		SiftDown(1,true);
+		Swap(1,index);
+		index--;
+		MakeSiftDown(1,true);
 		return ret;
 	}
     
 	/* insert a new object to the Heap*/
 	void Insert(T data){
-		array[elements+1]=data;
-		elements++;
-		FObj.changeIndex(array[elements],elements);
-		SiftUp(elements,true);
-		Resize();
+		array[index+1]=data;
+		index++;
+		FObj.changeIndex(array[index],index);
+		SiftUp(index,true);
+		ChangeSize();
 	}
     
 	/*Gets the number of element in the heap*/
-	int GetNumberOfElement()const{return elements;}
+	int NumberOfElement()const{return index;}
     
 	/*Gets the size of the array*/
-	int GetSize()const{return size;}
+	int GetArraySize()const{return size;}
     
 	/*print all the element in the heap*/
 	void print(){
-		for(int i=1;i<=elements;i++){
+		for(int i=1;i<=index;i++){
 			std::cout<<"ID: "<<FObj.GetId(array[i])<<","<<"Index: "<<FObj.GetIndex(array[i])<<", ";
 		}
 		std::cout<<std::endl;
@@ -222,19 +222,19 @@ public:
     
 	//Gets the K Biggest nodes at array.
 	void GetKBiggest(Heap<T,FuncObj>& heap,T* arr, int k) const{
-		if(k>elements){
+		if(k>index){
 			return;
 		}
 		int i=1,j=1;
 		arr[0]=array[1];
 		while(i<k){
-			if(2*j+1<=elements){
-				heap.InsertNotChangeIndex(array[2*j]);
-				heap.InsertNotChangeIndex(array[2*j+1]);
-			}else if(2*j<=elements){
-				heap.InsertNotChangeIndex(array[2*j]);
+			if(2*j+1<=index){
+				heap.InsertWithoutIndexChange(array[2*j]);
+				heap.InsertWithoutIndexChange(array[2*j+1]);
+			}else if(2*j<=index){
+				heap.InsertWithoutIndexChange(array[2*j]);
 			}
-			arr[i]=heap.DelMaxNotChangeIndex();
+			arr[i]=heap.RemoveMaxWithoutIndexChange();
 			j=FObj.GetIndex(arr[i]);
 			i++;
 		}
