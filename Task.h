@@ -6,6 +6,8 @@
 
 #ifndef DS_WET2_Task_h
 #define DS_WET2_Task_h
+#include <iostream>
+using std::cout;
 
 class Task{
 private:
