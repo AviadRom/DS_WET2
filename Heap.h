@@ -59,17 +59,13 @@ private:
 					Swap(i, 2 * i);
 					MakeSiftDown(2 * i);
 				} else {
-
 					Swap(i, 2 * i + 1);
-
 					MakeSiftDown(2 * i + 1);
 				}
 			}
 		} else if (2 * i <= numberOfElements) {
 			if (FObj.compare(array[2 * i], array[i])) {
-
 				Swap(i, 2 * i);
-
 			}
 		}
 	}
@@ -81,9 +77,7 @@ private:
 			return;
 		}
 		if (FObj.compare(array[i], array[i / 2])) {
-
 			Swap(i, i / 2);
-
 			MakeSiftUp(i / 2);
 		}
 	}
@@ -104,13 +98,10 @@ private:
 
 public:
 	/*Default c'tor*/
-	Heap() :
-			size(0), numberOfElements(0), array(NULL) {
-	}
+	Heap() :size(0), numberOfElements(0), array(NULL) {}
 
 	/*c'tor*/
-	Heap(int n) :
-			size(2 * n + 1), numberOfElements(0) {
+	Heap(int n) :size(2 * n + 1), numberOfElements(0) {
 		if (n == 0) {
 			size = 4;
 		}
@@ -126,7 +117,6 @@ public:
 		numberOfElements = n;
 		array = new T[size];
 		for (int i = 1; i <= numberOfElements; i++) {
-
 			array[i] = myArray[i - 1];
 		}
 		for (int i = numberOfElements / 2; i > 0; --i) {
