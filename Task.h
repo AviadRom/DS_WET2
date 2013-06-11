@@ -8,49 +8,41 @@
 #define DS_WET2_Task_h
 
 class Task{
-protected:
-	int Id;
-public:
-	Task(int ID):Id(ID){};
-	
-    Task(const Task& b): Id(b.Id){};
-	
-    virtual ~Task(){};
-	
-    int GetId() const{
-		return Id;
-	}
-	bool Compare(const Task& b) const{
-		return (Id == b.Id);
-	}
-};
-
-class TaskPriority: public Task{
 private:
+	int Id;
 	int Priority;
 public:
-	TaskPriority(int ID,int priority):Task(ID),Priority(priority){};
-    
-	TaskPriority(const TaskPriority& b): Task(b),Priority(b.Priority){};
-    
-	TaskPriority& operator=(const TaskPriority& b){
-		Priority = b.Priority;
-		Id=b.Id;
-		return *this;
+	Task(int ID = 0, int priority = 0):Id(ID),Priority(priority){};
+	
+	Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()){};
+	
+	~Task(){};
+	
+	int GetId() const{
+		return Id;
 	}
-	~TaskPriority(){};
-    
+	
+	bool Compare(const Task& b) const{
+		return (Id == b.GetId());
+	}
+	
+	Task& operator=(const Task& b){
+		Priority = b.GetPriority();
+		Id = b.GetId();
+	}
+	
 	int GetPriority() const{
 		return Priority;
 	}
 	void SetPriority(int val){
 		Priority = val;
 	}
-    
+	
 	void print(){
 		cout<<"id:"<< Id <<"  priority: "<< priority <<endl;
 	}
 };
+
 
 
 class TaskCmp{
@@ -63,11 +55,11 @@ public:
 class TaskGetId{
 public:
 	int operator()(const Request& a) const{
-		return a.getId();
+		return a.GetId();
 	}
 };
 
-class TaskPriorityFunctions{
+class TaskFunctions{
 public:
 	int GetId (const TaskPriority& a) const{
 		return a.GetId();
@@ -80,8 +72,12 @@ public:
 		return;
 	}
 	int compareById(const TaskPriority& a,const TaskPriority& b) const{
-		if (GetId(a)>GetId(b)) return 1;
-		if (GetId(a)<GetId(b)) return -1;
+		if (GetId(a) > GetId(b)){
+			return 1;
+		} 
+		if (GetId(a)<GetId(b)){ 
+			return -1;
+		}
 		return 0;
 	}
 };
