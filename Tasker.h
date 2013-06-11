@@ -17,7 +17,7 @@
 
 class Tasker{
 private:
-    HashTable<typename T, typename CmpFunc, typename helpFunc> IdHash;
+    HashTable<AVLTree<Task,TaskFunctions>, TaskCmp, typename helpFunc> IdHash;
     Heap<typename T,typename FuncObj> MinHeap;
     Heap<typename T,typename FuncObj> MaxHeap;
     
