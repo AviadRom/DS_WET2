@@ -33,7 +33,7 @@ private:
 	void InsertElement(T data) {
 		array[numberOfElements + 1] = data;
 		numberOfElements++;
-		MakeSiftUp(numberOfElements, false);
+		MakeSiftUp(numberOfElements);
 		ChangeSize();
 	}
 
@@ -42,7 +42,7 @@ private:
 		T ret = array[1];
 		Swap(1, numberOfElements);
 		numberOfElements--;
-		MakeSiftDown(1, false);
+		MakeSiftDown(1);
 		return ret;
 	}
 
