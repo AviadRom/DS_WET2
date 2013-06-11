@@ -2,8 +2,7 @@
 //  Tasker.h
 //  DS-WET2
 //
-//  Created by Aviad Rom on 6/2/13.
-//  Copyright (c) 2013 Aviad Rom. All rights reserved.
+//  Aviad Rom and Ohad Fireman
 //
 
 #ifndef DS_WET2_Tasker_h
@@ -15,16 +14,16 @@
 #include "Heap.h"
 #include "AVLTree.h"
 
+typedef HashTable<Task*, TaskCmp, TaskFunctions> TaskHash;
+typedef Heap<Task, TaskFunctions> MaxHeap;
+typedef Heap<Task, TaskFunctionsForMinHeap> MinHeap;
+
 class Tasker{
 private:
-    HashTable<AVLTree<Task,TaskFunctions>, TaskCmp, typename helpFunc> IdHash;
-    Heap<typename T,typename FuncObj> MinHeap;
-    Heap<typename T,typename FuncObj> MaxHeap;
-    
-    /*Data holders*/
-    //max heap with priority key
-    //min heap with priority key
-    //hash table with ID key
+    TaskHash IdHash;
+    MinHeap MinPriHeap;
+    MaxHeap MaxPriHeap;
+    int NumberOfTasks;
 public:
     Tasker (int size = 0, int[] taskIDs = NULL, int[] taskPriorities = NULL){
         //initialize hash table and heaps
@@ -79,12 +78,12 @@ public:
             return INVALID_INPUT;
         }
         //get min-heap root
-        Task tmp = MinHeap.GetRoot();
+        Task tmp = MinPriHeap.GetRoot();//should change to the right heap function
         *taskID = tmp.GetID();
         *priority = tmp.GetPriority();
         return SUCCESS;
     }
-
+    
     StatusType GetKthTask(int k, int* taskID, int* priority){
         if (taskID == NULL || priority == NULL || k > HashTable.GetNumOfElements() || k < 1){
             return INVALID_INPUT;
