@@ -25,13 +25,7 @@ private:
     MaxHeap MaxPriHeap;
     int NumberOfTasks;
 public:
-<<<<<<< HEAD
-    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size){
-=======
-    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL){
-        //initialize hash table and heaps
->>>>>>> 61f1edb7a7f8d88830a506652e20bc884e664ab9
-    }
+    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size){}
     /*Get&Set methods for any relevant class property*/
     
     StatusType AddTask(int taskID, int priority){
@@ -39,24 +33,14 @@ public:
    /*     if (IdHash.IsIn(taskID)){
             return FAILURE;
         }*/
-<<<<<<< HEAD
     /*    try {
-=======
-        try {
->>>>>>> 61f1edb7a7f8d88830a506652e20bc884e664ab9
         	Task task(taskID,priority);
         	HashResult result=IdHash.Insert(task);
         	if (result == HASH_TABLE_DATA_ALREADY_EXIST){
         		return FAILURE;
         	}
-<<<<<<< HEAD
         	MaxPriHeap.Insert(task);
         	MinPriHeap.Insert(task);
-=======
-        	MaxHeap.InsertElement(task);
-        	MinHeap.InsertElement(task);
->>>>>>> 61f1edb7a7f8d88830a506652e20bc884e664ab9
-
         } catch (bad_alloc& b){
             return ALLOCATION_ERROR;
         }*/
@@ -99,13 +83,8 @@ public:
             return INVALID_INPUT;
         }
         //get min-heap root
-<<<<<<< HEAD
         Task tmp = MinPriHeap.FindMax();//should change to the right heap function
         *taskID = tmp.GetId();
-=======
-        Task tmp = MinPriHeap.GetRoot();//should change to the right heap function
-        *taskID = tmp.GetID();
->>>>>>> 61f1edb7a7f8d88830a506652e20bc884e664ab9
         *priority = tmp.GetPriority();
         return SUCCESS;
     }
