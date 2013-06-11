@@ -31,13 +31,16 @@ private:
     
 	void ReBuild(){
 		double factorSize = (double) elements / tableSize;
-		if  (factorSize < 4.0) {
+		if  (factorSize < 4.0 && factorSize > 1.0) {
 			return;
 		}
 		int tempTableSize=tableSize;
 		if (factorSize >= 4.0) {
 			tableSize *= 2;
 		}
+        if (factorSize <= 1.0 && tableSize > 4){
+            tableSize /= 2;
+        }
         
 		AVLTree<T, CmpFunc>* temp = hTable;
 		hTable = new AVLTree<T, CmpFunc> [tableSize];
