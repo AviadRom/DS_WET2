@@ -32,10 +32,7 @@ public:
 	Task& operator=(const Task& b){
 		Priority = b.GetPriority();
 		Id = b.GetId();
-<<<<<<< HEAD
 		return *this;
-=======
->>>>>>> 61f1edb7a7f8d88830a506652e20bc884e664ab9
 	}
 	
 	int GetPriority() const{
@@ -46,11 +43,7 @@ public:
 	}
 	
 	void print(){
-<<<<<<< HEAD
 		cout<<"id:"<< Id <<"  Priority: "<< Priority <<endl;
-=======
-		cout<<"id:"<< Id <<"  Priority: "<< priority <<endl;
->>>>>>> 61f1edb7a7f8d88830a506652e20bc884e664ab9
 	}
 };
 
