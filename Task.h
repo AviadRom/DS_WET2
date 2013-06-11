@@ -8,6 +8,7 @@
 #define DS_WET2_Task_h
 #include <iostream>
 using std::cout;
+using std::endl;
 
 class Task{
 private:
@@ -50,7 +51,7 @@ public:
 class TaskCmp{
 public:
 	bool operator()(const Task& a,const Task& b) const{
-		return a.compare(b);
+		return a.Compare(b);
 	}
 };
 
