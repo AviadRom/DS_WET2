@@ -41,7 +41,7 @@ public:
 	}
 	
 	void print(){
-		cout<<"id:"<< Id <<"  priority: "<< priority <<endl;
+		cout<<"id:"<< Id <<"  Priority: "<< priority <<endl;
 	}
 };
 
