@@ -137,20 +137,10 @@ void Insert(T data) {
 	InsertElement(data);
 }
 
-void RemoveElement(Task task, string type) {
-	if (type.compare("min")) {
-		int index = task.GetMinHeapIndex();
+void RemoveElement(int index, string type) {
 		Swap(index, numberOfElements, type);
 		numberOfElements--;
-		MakeSiftDown (index);
-	} else {
-		int index = task.GetMaxHeapIndex();
-		Swap(index, numberOfElements, type);
-		numberOfElements--;
-		MakeSiftDown (index);
-	}
-
-
+		MakeSiftDown(index);
 }
 
 /*Delete the biggest element at the Heap*/
