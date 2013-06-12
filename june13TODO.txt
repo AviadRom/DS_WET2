@@ -1,0 +1,15 @@
+//June 13th ToDo's:
+
+1. Finish working on index updating between AVL and heaps
+2. Get this motherfucker compiling and running like a motherfucker...
+4. find where in the world did i put #3
+5. use the word FUCK extensively in various ways towards various targets (e.g. - that fucking fucker ECLIPSE is a 
+        motherfucking horribly implemented fucking IDE. i never want to fucking use it ne-tothemotherfucking-ver)
+        
+        
+        BUT NOW SERIOUSLY- too much work, too little time, let's get fuckin' through with this shit.
+        
+        
+        
+        Sincerely.
+        
