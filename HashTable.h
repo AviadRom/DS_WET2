@@ -92,6 +92,17 @@ public:
 		ReBuild();
 		return HASH_TABLE_SUCCESS;
 	}
+	
+	HashResult Remove(const T& data){
+        	if (!IsIn(data)){
+            	return HASH_TABLE_DATA_NOT_EXIST;
+        	}
+        	hTable->Remove(data);
+        	elements--;
+        	ReBuild();
+        	return HASH_TABLE_SUCCESS;
+    }
+
     
 	/*finds an element in the hashTable, assuming the element is in the HashTable
 	 *  gets a data copy of given element's data in HashTable.
