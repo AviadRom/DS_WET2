@@ -50,7 +50,7 @@ public:
 	}
 	
 	int GetMinHeapIndex(){
-		return MinHeapIndex;	
+		return MinHeapIndex;
 	}
 	
 	void SetMaxHeapIndex(int index){
@@ -96,8 +96,8 @@ public:
 	int compareById(const Task& a,const Task& b) const{
 		if (GetId(a) > GetId(b)){
 			return 1;
-		} 
-		if (GetId(a) < GetId(b)){ 
+		}
+		if (GetId(a) < GetId(b)){
 			return -1;
 		}
 		return 0;
@@ -110,6 +110,19 @@ public:
 	int GetIndex(Task* a){
 		return a->GetMaxHeapIndex();
 	}
+    
+    bool Compare(Task& a, Task& b){
+        if  (a.GetPriority() == b.GetPriority()){
+            if (a.GetId() > b.GetId()){
+                return true;
+            }
+            return false;
+        }
+        if (a.GetPriority() > b.GetPriority()){
+            return true;
+        }
+        return false;
+    }
 };
 
 //This class is exactly like TaskFunctions but the comparison by ID
@@ -142,6 +155,19 @@ public:
 	int GetIndex(Task* a){
 		return a->GetMinHeapIndex();
 	}
+    
+    bool Compare(Task& a, Task& b){
+        if  (a.GetPriority() == b.GetPriority()){
+            if (a.GetId() > b.GetId()){
+                return true;
+            }
+            return false;
+        }
+        if (a.GetPriority() < b.GetPriority()){
+            return true;
+        }
+        return false;
+    }
     
 };
 
