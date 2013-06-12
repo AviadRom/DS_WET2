@@ -14,6 +14,8 @@ class Task{
 private:
 	int Id;
 	int Priority;
+	int MaxHeapIndex;
+	int MinHeapIndex;
 public:
 	Task(int ID = 0, int priority = 0):Id(ID),Priority(priority){};
 	
@@ -38,8 +40,25 @@ public:
 	int GetPriority() const{
 		return Priority;
 	}
-	void SetPriority(int val){
-		Priority = val;
+	
+	void SetPriority(int pri){
+		Priority = pri;
+	}
+	
+	void SetMinHeapIndex(int index){
+		MinHeapIndex = index
+	}
+	
+	int GetMinHeapIndex(){
+		return MinHeapIndex;	
+	}
+	
+	void SetMaxHeapIndex(int index){
+		MaxHeapIndex = index;
+	}
+	
+	int GetMaxHeapIndex(){
+		return MaxHeapIndex;
 	}
 	
 	void print(){
@@ -73,7 +92,6 @@ public:
 	}
 	void SetVal(Task& a, int val){
 		a.SetPriority(val);
-		return;
 	}
 	int compareById(const Task& a,const Task& b) const{
 		if (GetId(a) > GetId(b)){
@@ -83,6 +101,14 @@ public:
 			return -1;
 		}
 		return 0;
+	}
+	
+	void SetIndex(Task* a, int Index){
+		a->SetMaxHeapIndex(index)
+	}
+	
+	int GetIndex(Task* a){
+		return a->GetMaxHeapIndex();
 	}
 };
 
@@ -98,7 +124,6 @@ public:
 	}
 	void SetVal(Task& a, int val){
 		a.SetPriority(val);
-		return;
 	}
 	int compareById(const Task& a,const Task& b) const{
 		if (GetId(a) > GetId(b)){
@@ -108,6 +133,14 @@ public:
 			return 1;
 		}
 		return 0;
+	}
+	
+	void SetIndex(Task* a, int Index){
+		a->SetMinHeapIndex(index)
+	}
+	
+	int GetIndex(Task* a){
+		return a->GetMinHeapIndex();
 	}
     
 };
