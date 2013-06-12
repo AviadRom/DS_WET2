@@ -39,7 +39,7 @@ public:
     /*Get&Set methods for any relevant class property*/
     
     StatusType AddTask(int taskID, int priority) {
-    		try {
+        	try {
     			HeapTask task(taskID, priority);
     			HashResult result = IdHash.Insert(task);
     			if (result == HASH_TABLE_DATA_ALREADY_EXIST) {
