@@ -123,6 +123,14 @@ public:
 			MakeSiftDown(i);
 		}
 	}
+	
+	void Insert(T data){
+		array[elements+1] = data;
+		elements++;
+		FObj.SetIndex(array[elements],elements);
+		MakeSiftUp(elements);
+		ChangeSize();
+	}
 
 	/*d'tor*/
 	~Heap() {
