@@ -83,7 +83,7 @@ public:
 	 *	Output: HashResult.
 	 *			HASH_TABLE_SUCCESS-in case of success
 	 *			HASH_TABLE_DATA_ALREADY_EXIST-in case this element already in the hash table*/
-	HashResult Insert(const T& data){
+	HashResult Insert(T& data){
 		int index = HashFunction(func.GetId(data));
 		if ((hTable[index]).insert(data) == AVL_TREE_DATA_ALREADY_EXIST) {
 			return HASH_TABLE_DATA_ALREADY_EXIST;
@@ -107,7 +107,7 @@ public:
 	/*finds an element in the hashTable, assuming the element is in the HashTable
 	 *  gets a data copy of given element's data in HashTable.
 	 * */
-	T Find(const T& data) const{
+	T& Find(T& data){
 		int index = HashFunction(func.GetId(data)) ;
 		return hTable[index].Find(data);
 	}
@@ -122,7 +122,7 @@ public:
     
 	/*return true if data in the HashTable, other false*/
 	bool IsIn(T& data)const{
-		int index =HashFunction( func.getId(data) );
+		int index =HashFunction( func.GetId(data) );
 		return hTable[index].DataInTree(data);
 	}
     
