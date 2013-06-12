@@ -84,20 +84,20 @@ public:
 
 class TaskFunctions{
 public:
-	int GetId (const Task& a) const{
-		return a.GetId();
+	int GetId (Task* a) const{
+		return a->GetId();
 	}
-	int GetVal(const Task& a) const{
-		return a.GetPriority();
+	int GetVal(Task* a) const{
+		return a->GetPriority();
 	}
-	void SetVal(Task& a, int val){
-		a.SetPriority(val);
+	void SetVal(Task* a, int val){
+		a->SetPriority(val);
 	}
 	int compareById(const Task& a,const Task& b) const{
-		if (GetId(a) > GetId(b)){
+		if (a.GetId() > b.GetId()){
 			return 1;
 		}
-		if (GetId(a) < GetId(b)){
+		if (a.GetId() < b.GetId()){
 			return -1;
 		}
 		return 0;
@@ -129,21 +129,22 @@ public:
 //returns oposite values in order to use Heap as a min heap.
 class TaskFunctionsForMinHeap{
 public:
-	int GetId (const Task& a) const{
-		return a.GetId();
+	int GetId (Task* a) const{
+		return a->GetId();
 	}
-	int GetVal(const Task& a) const{
-		return a.GetPriority();
+	int GetVal(Task* a) const{
+		return a->GetPriority();
 	}
-	void SetVal(Task& a, int val){
-		a.SetPriority(val);
+	void SetVal(Task* a, int val){
+		a->SetPriority(val);
 	}
+    
 	int compareById(const Task& a,const Task& b) const{
-		if (GetId(a) > GetId(b)){
-			return -1;
-		}
-		if (GetId(a) < GetId(b)){
+		if (a.GetId() > b.GetId()){
 			return 1;
+		}
+		if (a.GetId() < b.GetId()){
+			return -1;
 		}
 		return 0;
 	}
