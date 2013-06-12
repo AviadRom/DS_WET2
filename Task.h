@@ -17,9 +17,9 @@ private:
 	int MaxHeapIndex;
 	int MinHeapIndex;
 public:
-	Task(int ID = 0, int priority = 0):Id(ID),Priority(priority){};
+	Task(int ID = 0, int priority = 0):Id(ID), Priority(priority), MaxHeapIndex(0), MinHeapIndex(0){};
 	
-	Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()){};
+	Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()), MaxHeapIndex(0), MinHeapIndex(0){};
 	
 	~Task(){};
 	
