@@ -104,7 +104,7 @@ public:
 	}
 	
 	void SetIndex(Task* a, int index){
-		a->SetMaxHeapIndex(index)
+		a->SetMaxHeapIndex(index);
 	}
 	
 	int GetIndex(Task* a){
@@ -136,7 +136,7 @@ public:
 	}
 	
 	void SetIndex(Task* a, int index){
-		a->SetMinHeapIndex(index)
+		a->SetMinHeapIndex(index);
 	}
 	
 	int GetIndex(Task* a){
