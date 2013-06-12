@@ -58,6 +58,8 @@ public:
     
     HeapTask(HeapTask& b): Task(b), Index(b.GetIndex()), AVLNode(b.GetNode()){};
     
+    HeapTask(Task& task): Task(task), Index(-1), AVLNode(NULL){};
+    
     int GetIndex(){
         return Index;
     }
@@ -118,6 +120,7 @@ public:
         }
     }
     
+    
     ~AVLTask(){}
     
     int GetMaxIndex(){
@@ -153,6 +156,63 @@ public:
     }
 };
 
+/*class Task{
+private:
+	int Id;
+	int Priority;
+	int MaxHeapIndex;
+	int MinHeapIndex;
+public:
+	Task(int ID = 0, int priority = 0):Id(ID), Priority(priority), MaxHeapIndex(0), MinHeapIndex(0){};
+	
+	Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()), MaxHeapIndex(0), MinHeapIndex(0){};
+	
+	~Task(){};
+	
+	int GetId() const{
+		return Id;
+	}
+	
+	bool Compare(const Task& b) const{
+		return (Id == b.GetId());
+	}
+	
+	Task& operator=(const Task& b){
+		Priority = b.GetPriority();
+		Id = b.GetId();
+		return *this;
+	}
+	
+	int GetPriority() const{
+		return Priority;
+	}
+	
+	void SetPriority(int pri){
+		Priority = pri;
+	}
+	
+	void SetMinHeapIndex(int index){
+		MinHeapIndex = index;
+	}
+	
+	int GetMinHeapIndex(){
+		return MinHeapIndex;
+	}
+	
+	void SetMaxHeapIndex(int index){
+		MaxHeapIndex = index;
+	}
+	
+	int GetMaxHeapIndex(){
+		return MaxHeapIndex;
+	}
+	
+	void print(){
+		cout<<"id:"<< Id <<"  Priority: "<< Priority <<endl;
+	}
+};*/
+
+
 
 class TaskCmp{
 public:
@@ -171,14 +231,14 @@ public:
 class TaskFunctions{
 public:
 public:
-	int GetId (Task* a) const{
-		return a->GetId();
+	int GetId (Task& a) const{
+		return a.GetId();
 	}
-	int GetVal(Task* a) const{
-		return a->GetPriority();
+	int GetVal(Task& a) const{
+		return a.GetPriority();
 	}
-	void SetVal(Task* a, int val){
-		a->SetPriority(val);
+	void SetVal(Task& a, int val){
+		a.SetPriority(val);
 	}
     
 	int compareById(const Task& a,const Task& b) const{
