@@ -125,9 +125,9 @@ public:
 	}
 	
 	void Insert(T data){
-		array[elements+1] = data;
-		elements++;
-		FObj.SetIndex(array[elements],elements);
+		array[numberOfElements+1] = data;
+		numberOfElements++;
+		FObj.SetIndex(array[NumberOfElement],numberOfElements);
 		MakeSiftUp(elements);
 		ChangeSize();
 	}
