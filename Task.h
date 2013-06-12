@@ -46,7 +46,7 @@ public:
 	}
 	
 	void SetMinHeapIndex(int index){
-		MinHeapIndex = index
+		MinHeapIndex = index;
 	}
 	
 	int GetMinHeapIndex(){
@@ -103,7 +103,7 @@ public:
 		return 0;
 	}
 	
-	void SetIndex(Task* a, int Index){
+	void SetIndex(Task* a, int index){
 		a->SetMaxHeapIndex(index)
 	}
 	
@@ -135,7 +135,7 @@ public:
 		return 0;
 	}
 	
-	void SetIndex(Task* a, int Index){
+	void SetIndex(Task* a, int index){
 		a->SetMinHeapIndex(index)
 	}
 	
