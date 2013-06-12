@@ -29,21 +29,17 @@ public:
     /*Get&Set methods for any relevant class property*/
     
     StatusType AddTask(int taskID, int priority){
-
-   /*     if (IdHash.IsIn(taskID)){
-            return FAILURE;
-        }*/
-    /*    try {
-        	Task task(taskID,priority);
-        	HashResult result=IdHash.Insert(task);
+        try {
+            Task task(taskID,priority);
+        	HashResult result=IdHash.Insert(&task);
         	if (result == HASH_TABLE_DATA_ALREADY_EXIST){
         		return FAILURE;
         	}
-        	MaxPriHeap.Insert(task);
-        	MinPriHeap.Insert(task);
+        	MaxPriHeap.Insert(task,"max");
+        	MinPriHeap.Insert(task,"min");
         } catch (bad_alloc& b){
             return ALLOCATION_ERROR;
-        }*/
+        }
         return SUCCESS;
     }
     
@@ -59,10 +55,10 @@ public:
     }
     
     StatusType SetPriority (int taskID,int priority){
-        Task tmp(taskID, priority);
-        if (!IdHash.IsIn(tmp)){
-            return FAILURE;
-        }
+   //     Task tmp(taskID, priority);
+   //     if (!IdHash.IsIn(tmp)){
+   //         return FAILURE;
+   //     }
         //1. get task from hash table
         //2. change priority
         //3. sift-down fixes to the heaps if neccessary.
