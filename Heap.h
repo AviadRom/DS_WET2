@@ -137,6 +137,7 @@ void Insert(T data) {
 	InsertElement(data);
 }
 
+/*Removes The element in index at heap of type min or max.*/
 void RemoveElement(int index, string type) {
 		Swap(index, numberOfElements, type);
 		numberOfElements--;
