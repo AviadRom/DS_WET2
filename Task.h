@@ -12,16 +12,15 @@ using std::endl;
 
 class Task{
 private:
-	int Id;
-	int Priority;
-	int MaxHeapIndex;
-	int MinHeapIndex;
+    int Id;
+    int Priority;
 public:
-	Task(int ID = 0, int priority = 0):Id(ID), Priority(priority), MaxHeapIndex(0), MinHeapIndex(0){};
-	
-	Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()), MaxHeapIndex(0), MinHeapIndex(0){};
-	
-	~Task(){};
+    
+    Task(int ID = 0, int pri = 0):Id(ID), Priority(pri){};
+    
+    Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()){};
+    
+    virtual ~Task(){};
 	
 	int GetId() const{
 		return Id;
@@ -44,28 +43,115 @@ public:
 	void SetPriority(int pri){
 		Priority = pri;
 	}
-	
-	void SetMinHeapIndex(int index){
-		MinHeapIndex = index;
-	}
-	
-	int GetMinHeapIndex(){
-		return MinHeapIndex;
-	}
-	
-	void SetMaxHeapIndex(int index){
-		MaxHeapIndex = index;
-	}
-	
-	int GetMaxHeapIndex(){
-		return MaxHeapIndex;
-	}
-	
-	void print(){
-		cout<<"id:"<< Id <<"  Priority: "<< Priority <<endl;
-	}
+    
+    
 };
 
+class AVLTask;
+
+class HeapTask: public Task{
+private:
+    AVLTask* AVLNode;
+    int Index;
+public:
+    HeapTask(int ID = 0, int pri = 0, int index = 0):Task(ID, pri), Index(index), AVLNode(NULL){};
+    
+    HeapTask(HeapTask& b): Task(b), Index(b.GetIndex()), AVLNode(b.GetNode()){};
+    
+    int GetIndex(){
+        return Index;
+    }
+    
+    AVLTask* GetNode(){
+        return AVLNode;
+    }
+
+    void SetIndex(int index){
+        Index = index;
+    }
+    
+    void SetNode (AVLTask* node){
+        AVLNode = node;
+    }
+    
+    ~HeapTask(){}
+};
+
+
+class AVLTask: public Task{
+private:
+	int MaxIndex;
+	int MinIndex;
+    HeapTask* MinTask;
+    HeapTask* MaxTask;
+public:
+    //Default C'tor
+    AVLTask(int ID = 0, int pri = 0, HeapTask* min = NULL, HeapTask* max = NULL):
+            Task(ID, pri), MinTask(min), MaxTask(max){
+        if (min){
+            MinIndex = min->GetIndex();
+        }else {
+            MinIndex = -1;
+        }
+        if (max){
+            MaxIndex = max->GetIndex();
+        }else {
+            MaxIndex = -1;
+        }
+    }
+    
+    //Copy C'tor
+    AVLTask(AVLTask& b): Task(b), MaxTask(b.GetMaxTask()), MinTask(b.GetMinTask()), MaxIndex(b.GetMaxIndex()),
+                         MinIndex(b.GetMinIndex()){};
+    
+    //Another usable variation of a C'tor
+    AVLTask(Task& task, HeapTask* max = NULL, HeapTask* min = NULL): Task(task), MaxTask(max), MinTask(min){
+        if (min){
+            MinIndex = min->GetIndex();
+        }else {
+            MinIndex = -1;
+        }
+        if (max){
+            MaxIndex = max->GetIndex();
+        }else {
+            MaxIndex = -1;
+        }
+    }
+    
+    ~AVLTask(){}
+    
+    int GetMaxIndex(){
+        return MaxIndex;
+    }
+    
+    int GetMinIndex(){
+        return MinIndex;
+    }
+    
+    HeapTask* GetMaxTask(){
+        return MaxTask;
+    }
+    
+    HeapTask* GetMinTask(){
+        return MinTask;
+    }
+    
+    void SetMaxIndex(int index){
+        MaxIndex = index;
+    }
+    
+    void SetMinIndex(int index){
+        MinIndex = index;
+    }
+    
+    void SetMaxTask(HeapTask* max){
+        MaxTask = max;
+    }
+    
+    void SetMinTask(HeapTask* min){
+        MinTask = min;
+    }
+};
 
 
 class TaskCmp{
@@ -84,50 +170,6 @@ public:
 
 class TaskFunctions{
 public:
-	int GetId (Task* a) const{
-		return a->GetId();
-	}
-	int GetVal(Task* a) const{
-		return a->GetPriority();
-	}
-	void SetVal(Task* a, int val){
-		a->SetPriority(val);
-	}
-	int compareById(const Task& a,const Task& b) const{
-		if (a.GetId() > b.GetId()){
-			return 1;
-		}
-		if (a.GetId() < b.GetId()){
-			return -1;
-		}
-		return 0;
-	}
-	
-	void SetIndex(Task* a, int index){
-		a->SetMaxHeapIndex(index);
-	}
-	
-	int GetIndex(Task* a){
-		return a->GetMaxHeapIndex();
-	}
-    
-    bool Compare(Task& a, Task& b){
-        if  (a.GetPriority() == b.GetPriority()){
-            if (a.GetId() > b.GetId()){
-                return true;
-            }
-            return false;
-        }
-        if (a.GetPriority() > b.GetPriority()){
-            return true;
-        }
-        return false;
-    }
-};
-
-//This class is exactly like TaskFunctions but the comparison by ID
-//returns oposite values in order to use Heap as a min heap.
-class TaskFunctionsForMinHeap{
 public:
 	int GetId (Task* a) const{
 		return a->GetId();
@@ -148,15 +190,41 @@ public:
 		}
 		return 0;
 	}
-	
-	void SetIndex(Task* a, int index){
-		a->SetMinHeapIndex(index);
-	}
-	
-	int GetIndex(Task* a){
-		return a->GetMinHeapIndex();
-	}
     
+    virtual bool Compare(Task& a, Task& b){
+        if  (a.GetPriority() == b.GetPriority()){
+            if (a.GetId() > b.GetId()){
+                return true;
+            }
+            return false;
+        }
+        if (a.GetPriority() > b.GetPriority()){
+            return true;
+        }
+        return false;
+    }
+};
+//Refering Max Heap
+class HeapTaskFunctions: public TaskFunctions{
+	void SetIndex(HeapTask* a, int index){
+		a->SetIndex(index);
+	}
+	
+	int GetIndex(HeapTask* a){
+		return a->GetIndex();
+	}
+
+};
+
+class MinHeapTaskFunctions: public TaskFunctions{
+public:
+    void SetIndex(HeapTask* a, int index){
+		a->SetIndex(index);
+	}
+	
+	int GetIndex(HeapTask* a){
+		return a->GetIndex();
+	}
     bool Compare(Task& a, Task& b){
         if  (a.GetPriority() == b.GetPriority()){
             if (a.GetId() > b.GetId()){
@@ -169,8 +237,9 @@ public:
         }
         return false;
     }
-    
 };
+
+
 
 
 
