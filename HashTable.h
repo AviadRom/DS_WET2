@@ -49,7 +49,7 @@ private:
 			T* tempDataArray = new T[arraySize]();
 			temp[i].GetTreeInArray(tempDataArray);
 			for (int j = 0; j < arraySize; j++) {
-				int index =HashFunction( func.GetId(tempDataArray[j]) );
+				int index = HashFunction( func.GetId(tempDataArray[j]) );
 				(hTable[index]).insert(tempDataArray[j]);
 			}
 			delete[] tempDataArray;
@@ -84,7 +84,7 @@ public:
 	 *			HASH_TABLE_SUCCESS-in case of success
 	 *			HASH_TABLE_DATA_ALREADY_EXIST-in case this element already in the hash table*/
 	HashResult Insert(const T& data){
-		int index =HashFunction( func.GetId(data) );
+		int index = HashFunction(func.GetId(data));
 		if ((hTable[index]).insert(data) == AVL_TREE_DATA_ALREADY_EXIST) {
 			return HASH_TABLE_DATA_ALREADY_EXIST;
 		}
@@ -92,23 +92,23 @@ public:
 		ReBuild();
 		return HASH_TABLE_SUCCESS;
 	}
-	
-	HashResult Remove(const T& data){
-        	if (!IsIn(data)){
-            	return HASH_TABLE_DATA_NOT_EXIST;
-        	}
-        	hTable->Remove(data);
-        	elements--;
-        	ReBuild();
-        	return HASH_TABLE_SUCCESS;
-    }
 
+    /*Removes an element from the hash table if it exists*/
+    HashResult Remove(const T& data){
+        if (!IsIn(data)){
+            return HASH_TABLE_DATA_NOT_EXIST;
+        }
+        hTable->Remove(data);
+        elements--;
+        ReBuild();
+        return HASH_TABLE_SUCCESS;
+    }
     
 	/*finds an element in the hashTable, assuming the element is in the HashTable
 	 *  gets a data copy of given element's data in HashTable.
 	 * */
 	T Find(const T& data) const{
-		int index = HashFunction(func.getId(data)) ;
+		int index = HashFunction(func.GetId(data)) ;
 		return hTable[index].Find(data);
 	}
     
