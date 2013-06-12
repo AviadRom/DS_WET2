@@ -55,14 +55,22 @@ public:
     }
     
     StatusType SetPriority (int taskID,int priority){
-   //     Task tmp(taskID, priority);
-   //     if (!IdHash.IsIn(tmp)){
-   //         return FAILURE;
-   //     }
-        //1. get task from hash table
-        //2. change priority
-        //3. sift-down fixes to the heaps if neccessary.
-        return SUCCESS;
+        Task tmp(taskID, priority);
+        if (!IdHash.IsIn(&tmp)){
+            return FAILURE;
+        }
+        try{
+            Task* task=IdHash.Find(&tmp);
+            int taskMaxIndex=task->GetMaxHeapIndex();
+            MaxPriHeap.RemoveElement(taskMaxIndex, "max");
+            MinPriHeap.RemoveElement(taskMaxIndex, "min");
+            task->SetPriority(priority);
+            MaxPriHeap.Insert(taskMaxIndex, "max");
+            MinPriHeap.Insert(taskMaxIndex, "min");
+        	} catch (bad_alloc& b){
+        		return ALLOCATION_ERROR;
+            }
+            return SUCCESS;
     }
     
     StatusType Cancel (int taskID){
