@@ -51,17 +51,18 @@ public:
         if (taskID == NULL || priority == NULL){
             return FAILURE;
         }
-        //maxheap.removemax();
-        //fix heaps using siftdown
-        //maxheap.getroot();
-        //assign to pointers
+        Task tmp=MaxPriHeap.RemoveMaxElement();
+        //Also need to remove from MinHeap and Hash Table.
+        *taskID = tmp.GetId();
+        *priority = tmp.GetPriority();
         return SUCCESS;
     }
     
     StatusType SetPriority (int taskID,int priority){
-       /* if (!IdHash.IsIn(taskID)){
+        Task tmp(taskID, priority);
+        if (!IdHash.IsIn(tmp)){
             return FAILURE;
-        }*/
+        }
         //1. get task from hash table
         //2. change priority
         //3. sift-down fixes to the heaps if neccessary.
