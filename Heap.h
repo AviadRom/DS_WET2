@@ -28,11 +28,11 @@ private:
 			array[i] = array[j];
 			array[j] = temp;
 			if (type.compare("min")) {
-				array[i].SetMinHeapIndex(j);
-				array[j].SetMinHeapIndex(i);
+				array[i].SetIndex(j);
+				array[j].SetIndex(i);
 			} else {
-				array[i].SetMaxHeapIndex(j);
-				array[j].SetMaxHeapIndex(i);
+				array[i].SetIndex(j);
+				array[j].SetIndex(i);
 			}
             
 		}
