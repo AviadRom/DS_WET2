@@ -15,8 +15,8 @@
 #include "AVLTree.h"
 
 typedef HashTable<Task*, TaskCmp, TaskFunctions> TaskHash;
-typedef Heap<Task, TaskFunctions> MaxHeap;
-typedef Heap<Task, TaskFunctionsForMinHeap> MinHeap;
+typedef Heap<HeapTask, HeapTaskFunctions> MaxHeap;
+typedef Heap<HeapTask, MinHeapTaskFunctions> MinHeap;
 
 class Tasker{
 private:
@@ -25,11 +25,25 @@ private:
     MaxHeap MaxPriHeap;
     int NumberOfTasks;
 public:
-    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size){}
+    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size),
+            NumberOfTasks(size){
+                //initialize task array and heaps
+                //makeheap for both heaps
+                //get
+                /*Task* taskArray = new Task[size];
+                for (int i = 0 ; i < size; i++){
+                    Task tmp(taskIDs[i],taskPriorities[i]);
+                    taskArray[i] = tmp;
+                }*/
+    }
     /*Get&Set methods for any relevant class property*/
     
     StatusType AddTask(int taskID, int priority){
-        try {
+        
+        /*     if (IdHash.IsIn(taskID)){
+         return FAILURE;
+         }*/
+    /*    try {
             Task task(taskID,priority);
         	HashResult result=IdHash.Insert(&task);
         	if (result == HASH_TABLE_DATA_ALREADY_EXIST){
@@ -39,7 +53,7 @@ public:
         	MinPriHeap.Insert(task,"min");
         } catch (bad_alloc& b){
             return ALLOCATION_ERROR;
-        }
+        }*/
         return SUCCESS;
     }
     
@@ -47,36 +61,31 @@ public:
         if (taskID == NULL || priority == NULL){
             return FAILURE;
         }
-        Task tmp=MaxPriHeap.RemoveMaxElement();
+    /*    AVLTask tmp(*taskID, *priority);
+        AVLTask toRemove = IdHash.Find(&tmp);
+        MaxPriHeap.RemoveMaxElement();
+        MinPriHeap.RemoveElement(toRemove.GetMinIndex(),"min");*/
+       // Task tmp=MaxPriHeap.RemoveMaxElement();
         //Also need to remove from MinHeap and Hash Table.
-        *taskID = tmp.GetId();
-        *priority = tmp.GetPriority();
+        //*taskID = tmp.GetId();
+        //*priority = tmp.GetPriority();
         return SUCCESS;
     }
     
     StatusType SetPriority (int taskID,int priority){
-        Task tmp(taskID, priority);
-        if (!IdHash.IsIn(&tmp)){
-            return FAILURE;
-        }
-        try{
-            Task* task=IdHash.Find(&tmp);
-            int taskMaxIndex=task->GetMaxHeapIndex();
-            MaxPriHeap.RemoveElement(taskMaxIndex, "max");
-            MinPriHeap.RemoveElement(taskMaxIndex, "min");
-            task->SetPriority(priority);
-            MaxPriHeap.Insert(taskMaxIndex, "max");
-            MinPriHeap.Insert(taskMaxIndex, "min");
-        	} catch (bad_alloc& b){
-        		return ALLOCATION_ERROR;
-            }
-            return SUCCESS;
+        /* if (!IdHash.IsIn(taskID)){
+         return FAILURE;
+         }*/
+        //1. get task from hash table
+        //2. change priority
+        //3. sift-down fixes to the heaps if neccessary.
+        return SUCCESS;
     }
     
     StatusType Cancel (int taskID){
-     /*   if (!IdHash.IsIn(taskID)){
-            return FAILURE;
-        }*/
+        /*   if (!IdHash.IsIn(taskID)){
+         return FAILURE;
+         }*/
         // get task
         // remove from heaps and fix them
         // remove from hash table
@@ -95,9 +104,9 @@ public:
     }
     
     StatusType GetKthTask(int k, int* taskID, int* priority){
-/*        if (taskID == NULL || priority == NULL || k > IdHash.GetNumOfElements() || k < 1){
-            return INVALID_INPUT;
-        }*/
+        /*        if (taskID == NULL || priority == NULL || k > IdHash.GetNumOfElements() || k < 1){
+         return INVALID_INPUT;
+         }*/
         // DO MAGIC
         return SUCCESS;
     }
