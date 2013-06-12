@@ -49,7 +49,7 @@ private:
 			T* tempDataArray = new T[arraySize]();
 			temp[i].GetTreeInArray(tempDataArray);
 			for (int j = 0; j < arraySize; j++) {
-				int index =HashFunction( func.getId(tempDataArray[j]) );
+				int index =HashFunction( func.GetId(tempDataArray[j]) );
 				(hTable[index]).insert(tempDataArray[j]);
 			}
 			delete[] tempDataArray;
@@ -84,7 +84,7 @@ public:
 	 *			HASH_TABLE_SUCCESS-in case of success
 	 *			HASH_TABLE_DATA_ALREADY_EXIST-in case this element already in the hash table*/
 	HashResult Insert(const T& data){
-		int index =HashFunction( func.getId(data) );
+		int index =HashFunction( func.GetId(data) );
 		if ((hTable[index]).insert(data) == AVL_TREE_DATA_ALREADY_EXIST) {
 			return HASH_TABLE_DATA_ALREADY_EXIST;
 		}
