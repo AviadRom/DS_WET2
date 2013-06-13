@@ -107,7 +107,7 @@ public:
 	/*finds an element in the hashTable, assuming the element is in the HashTable
 	 *  gets a data copy of given element's data in HashTable.
 	 * */
-	T& Find(T& data){
+	T* Find(T& data){
 		int index = HashFunction(func.GetId(data)) ;
 		return hTable[index].Find(data);
 	}
