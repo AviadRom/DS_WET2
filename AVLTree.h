@@ -156,15 +156,15 @@ private:
 	}
     
 	bool operator==(const AVLNode& node) const {
-		return comperFunc(*data, *node.data) == 0;
+		return comperFunc(data, node.data) == 0;
 	}
     
 	bool operator<(const AVLNode& node) const {
-		return comperFunc(*data, *node.data) == -1;
+		return comperFunc(data, node.data) == -1;
 	}
     
 	bool operator>(const AVLNode& node) const {
-		return comperFunc(*data, *node.data) == 1;
+		return comperFunc(data, node.data) == 1;
 	}
     
 	/*assuming the sons are with correct sons tree*/
@@ -317,14 +317,14 @@ public:
 	/*assuming the data in the tree
 	 *gets a copy of given data in node
 	 */
-	T& FindInNode(const T& Data) {
+	T* FindInNode(const T& Data) {
 		AVLNode elementToSearch(Data);
 		if (*this > elementToSearch) {
-			return leftSon->FindInNode(Data);
+			return &(leftSon->FindInNode(Data));
 		} else if (*this < elementToSearch) {
-			return rightSon->FindInNode(Data);
+			return &(rightSon->FindInNode(Data));
 		}
-		return this->data;
+		return &(this->data);
 	}
     
 	/* deletes Node and corrects tree */
@@ -534,7 +534,7 @@ public:
 	/* assuming data in the tree.
 	 * gets a data copy of given element's data in tree.
 	 */
-	T Find(const T& data) const {
+	T* Find(const T& data) const {
 		assert(root!=NULL && root->dataIsIn(data));
 		return root->FindInNode(data);
 	}
