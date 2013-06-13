@@ -56,11 +56,13 @@ public:
 		MinPriHeap.Insert(heap);
 		int MaxHeapIndex=avlP->GetMaxIndex();
 		int MinHeapIndex=avlP->GetMinIndex();
-		if (MaxHeapIndex == -1){
-			MaxHeapIndex=MaxPriHeap.NumberOfElement();
+		if (MaxHeapIndex == -1) {
+			MaxHeapIndex = MaxPriHeap.NumberOfElement();
+			avlP->SetMaxIndex(MaxHeapIndex);
 		}
-		if (MinHeapIndex == -1){
-			MinHeapIndex=MinPriHeap.NumberOfElement();
+		if (MinHeapIndex == -1) {
+			MinHeapIndex = MinPriHeap.NumberOfElement();
+			avlP->SetMinIndex(MinHeapIndex);
 		}
 		heap = MaxPriHeap.getElement(MaxHeapIndex);
 		avlP->SetMaxTask(&heap);
@@ -104,9 +106,11 @@ public:
 		MinHeapIndex = hashP->GetMinIndex();
 		if (MaxHeapIndex == -1) {
 			MaxHeapIndex = MaxPriHeap.NumberOfElement();
+			hashP->SetMaxIndex(MaxHeapIndex);
 		}
 		if (MinHeapIndex == -1) {
 			MinHeapIndex = MinPriHeap.NumberOfElement();
+			hashP->SetMinIndex(MinHeapIndex);
 		}
 	} catch (bad_alloc& b) {
 		return ALLOCATION_ERROR;
