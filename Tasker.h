@@ -37,8 +37,8 @@ public:
                     HeapTask tmp(taskIDs[i],taskPriorities[i]);
                     htArray[i] = tmp;
                 }
-                MaxPriHeap.MakeHeap(htArray,size,"max");
-                MinPriHeap.MakeHeap(htArray,size,"min");
+                MaxPriHeap.MakeHeap(htArray,size);
+                MinPriHeap.MakeHeap(htArray,size);
                 
     }
     /*Get&Set methods for any relevant class property*/
@@ -52,8 +52,8 @@ public:
 				return FAILURE;
 			}
             HeapTask heap(task);
-			MaxPriHeap.Insert(heap, "max");
-			MinPriHeap.Insert(heap, "min");
+			MaxPriHeap.Insert(heap);
+			MinPriHeap.Insert(heap);
 		} catch (bad_alloc& b) {
 			return ALLOCATION_ERROR;
 		}
@@ -82,11 +82,11 @@ public:
             HeapTask* MaxHeapTask=task->MaxTask;
             int taskMaxIndex = task.GetMaxIndex();
             int taskMinIndex=task.GetMinIndex();
-            MaxPriHeap.RemoveElement(taskMaxIndex, "max");
-            MinPriHeap.RemoveElement(taskMinIndex, "min");
+            MaxPriHeap.RemoveElement(taskMaxIndex);
+            MinPriHeap.RemoveElement(taskMinIndex);
             task.SetPriority(priority);
-            MaxPriHeap.Insert(task, "max");
-            MinPriHeap.Insert(task, "min");
+            MaxPriHeap.Insert(task);
+            MinPriHeap.Insert(task);
         } catch (bad_alloc& b) {
             return ALLOCATION_ERROR;
         }
