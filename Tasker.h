@@ -26,7 +26,7 @@ private:
     int NumberOfTasks;
 public:
     Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size),
-            NumberOfTasks(size), MinPriHeap(size), MaxPriHeap(size){
+            MinPriHeap(size), MaxPriHeap(size),NumberOfTasks(size){
                 //initialize task array and heaps
                 //makeheap for both heaps
                 //get
@@ -78,12 +78,15 @@ public:
         }
         try {
             AVLTask task = IdHash.Find(tmp);
+            HeapTask* MinHeapTask=task->MinTask;
+            HeapTask* MaxHeapTask=task->MaxTask;
             int taskMaxIndex = task.GetMaxIndex();
+            int taskMinIndex=task.GetMinIndex();
             MaxPriHeap.RemoveElement(taskMaxIndex, "max");
-            MinPriHeap.RemoveElement(taskMaxIndex, "min");
+            MinPriHeap.RemoveElement(taskMinIndex, "min");
             task.SetPriority(priority);
-            MaxPriHeap.Insert(taskMaxIndex, "max");
-            MinPriHeap.Insert(taskMaxIndex, "min");
+            MaxPriHeap.Insert(task, "max");
+            MinPriHeap.Insert(task, "min");
         } catch (bad_alloc& b) {
             return ALLOCATION_ERROR;
         }
