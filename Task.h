@@ -209,6 +209,7 @@ public:
 };
 //Refering Max Heap
 class HeapTaskFunctions: public TaskFunctions{
+public:
 	void SetIndex(HeapTask* a, int index){
 		a->SetIndex(index);
         AVLTask* tempNode = a->GetNode();
