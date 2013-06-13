@@ -21,6 +21,10 @@ public:
     Task(const Task& b): Id(b.GetId()), Priority(b.GetPriority()){};
     
     virtual ~Task(){};
+    
+    void SetId(int n){
+        Id = n;
+    }
 	
 	int GetId() const{
 		return Id;
@@ -54,20 +58,27 @@ private:
     AVLTask* AVLNode;
     int Index;
 public:
-    HeapTask(int ID = 0, int pri = 0, int index = 0):Task(ID, pri), AVLNode(NULL),Index(index) {};
+    HeapTask(int ID = 0, int pri = 0, AVLTask* node = NULL):Task(ID, pri), AVLNode(node),Index(0) {};
     
-    HeapTask(HeapTask& b): Task(b),AVLNode(b.GetNode()), Index(b.GetIndex()){};
+    HeapTask(const HeapTask& b): Task(b),AVLNode(b.GetNode()), Index(b.GetIndex()){};
     
     HeapTask(Task& task): Task(task),AVLNode(NULL), Index(-1){};
     
-    int GetIndex(){
+    const bool operator=(HeapTask& b){
+        SetId(b.GetId());
+        SetPriority(b.GetPriority());
+        Index = b.GetIndex();
+        return true;
+    }
+    
+    int GetIndex() const{
         return Index;
     }
     
-    AVLTask* GetNode(){
+    AVLTask* GetNode() const{
         return AVLNode;
     }
-
+    
     void SetIndex(int index){
         Index = index;
     }
@@ -89,7 +100,7 @@ private:
 public:
     //Default C'tor
     AVLTask(int ID = 0, int pri = 0, HeapTask* min = NULL, HeapTask* max = NULL):
-            Task(ID, pri), MinTask(min), MaxTask(max){
+    Task(ID, pri), MinTask(min), MaxTask(max){
         if (min){
             MinIndex = min->GetIndex();
         }else {
@@ -103,8 +114,8 @@ public:
     }
     
     //Copy C'tor
-    AVLTask(AVLTask& b): Task(b), MaxIndex(b.GetMaxIndex()),
-                         MinIndex(b.GetMinIndex()),MinTask(b.GetMinTask()),MaxTask(b.GetMaxTask()) {};
+    AVLTask(const AVLTask& b): Task(b), MaxIndex(b.GetMaxIndex()),
+    MinIndex(b.GetMinIndex()),MinTask(b.GetMinTask()),MaxTask(b.GetMaxTask()) {};
     
     //Another usable variation of a C'tor
     AVLTask(Task& task, HeapTask* max = NULL, HeapTask* min = NULL): Task(task),MinTask(min), MaxTask(max) {
@@ -123,19 +134,19 @@ public:
     
     ~AVLTask(){}
     
-    int GetMaxIndex(){
+    int GetMaxIndex() const{
         return MaxIndex;
     }
     
-    int GetMinIndex(){
+    int GetMinIndex() const{
         return MinIndex;
     }
     
-    HeapTask* GetMaxTask(){
+    HeapTask* GetMaxTask() const{
         return MaxTask;
     }
     
-    HeapTask* GetMinTask(){
+    HeapTask* GetMinTask() const{
         return MinTask;
     }
     
@@ -221,7 +232,7 @@ public:
 	int GetIndex(HeapTask* a){
 		return a->GetIndex();
 	}
-
+    
 };
 
 class MinHeapTaskFunctions: public TaskFunctions{
@@ -231,6 +242,7 @@ public:
         AVLTask* tempNode = a->GetNode();
         if (tempNode){
             tempNode->SetMinIndex(index);
+            
         }
 	}
 	
