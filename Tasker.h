@@ -25,21 +25,20 @@ private:
     MaxHeap MaxPriHeap;
     int NumberOfTasks;
 public:
-    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size),
-            MinPriHeap(size), MaxPriHeap(size),NumberOfTasks(size){
-                //initialize task array and heaps
-                //makeheap for both heaps
-                //get
-                
-                HeapTask* htArray = new HeapTask[size];
-                AVLTask* avltArray = new AVLTask[size];
-                for (int i = 0; i < size; i++){
-                    HeapTask tmp(taskIDs[i],taskPriorities[i]);
-                    htArray[i] = tmp;
-                }
-                MaxPriHeap.MakeHeap(htArray,size);
-                MinPriHeap.MakeHeap(htArray,size);
-                
+ Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size),
+    MinPriHeap(size), MaxPriHeap(size),NumberOfTasks(size){
+        HeapTask* htArray = new HeapTask[size];
+        for (int i = 0; i < size; i++){
+            AVLTask avl(taskIDs[i], taskPriorities[i]);
+            IdHash.Insert(avl);
+            AVLTask* forHeap = IdHash.Find(avl);
+            HeapTask tmp(taskIDs[i], taskPriorities[i],forHeap);
+            htArray[i] = tmp;
+        }
+        MaxPriHeap.MakeHeap(htArray,size);
+        MinPriHeap.MakeHeap(htArray,size);
+        delete[] htArray;
+        
     }
     /*Get&Set methods for any relevant class property*/
     
