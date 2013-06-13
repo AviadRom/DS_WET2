@@ -118,7 +118,7 @@ public:
     
 	
 	T& getElement(int index) const{
-		if (index<=numberOfElements){
+		if (index>0 && index<=numberOfElements){
 			return array[index];
 		}
 		return array[1];//if the index is out of range, return the first element.
