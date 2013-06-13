@@ -320,9 +320,9 @@ public:
 	T* FindInNode(const T& Data) {
 		AVLNode elementToSearch(Data);
 		if (*this > elementToSearch) {
-			return &(leftSon->FindInNode(Data));
+			return leftSon->FindInNode(Data);
 		} else if (*this < elementToSearch) {
-			return &(rightSon->FindInNode(Data));
+			return rightSon->FindInNode(Data);
 		}
 		return &(this->data);
 	}
