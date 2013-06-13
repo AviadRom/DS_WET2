@@ -54,11 +54,11 @@ private:
     AVLTask* AVLNode;
     int Index;
 public:
-    HeapTask(int ID = 0, int pri = 0, int index = 0):Task(ID, pri), Index(index), AVLNode(NULL){};
+    HeapTask(int ID = 0, int pri = 0, int index = 0):Task(ID, pri), AVLNode(NULL),Index(index) {};
     
-    HeapTask(HeapTask& b): Task(b), Index(b.GetIndex()), AVLNode(b.GetNode()){};
+    HeapTask(HeapTask& b): Task(b),AVLNode(b.GetNode()), Index(b.GetIndex()){};
     
-    HeapTask(Task& task): Task(task), Index(-1), AVLNode(NULL){};
+    HeapTask(Task& task): Task(task),AVLNode(NULL), Index(-1){};
     
     int GetIndex(){
         return Index;
@@ -103,11 +103,11 @@ public:
     }
     
     //Copy C'tor
-    AVLTask(AVLTask& b): Task(b), MaxTask(b.GetMaxTask()), MinTask(b.GetMinTask()), MaxIndex(b.GetMaxIndex()),
-                         MinIndex(b.GetMinIndex()){};
+    AVLTask(AVLTask& b): Task(b), MaxIndex(b.GetMaxIndex()),
+                         MinIndex(b.GetMinIndex()),MinTask(b.GetMinTask()),MaxTask(b.GetMaxTask()) {};
     
     //Another usable variation of a C'tor
-    AVLTask(Task& task, HeapTask* max = NULL, HeapTask* min = NULL): Task(task), MaxTask(max), MinTask(min){
+    AVLTask(Task& task, HeapTask* max = NULL, HeapTask* min = NULL): Task(task),MinTask(min), MaxTask(max) {
         if (min){
             MinIndex = min->GetIndex();
         }else {
