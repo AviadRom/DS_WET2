@@ -42,21 +42,34 @@ public:
     }
     /*Get&Set methods for any relevant class property*/
     
-    StatusType AddTask(int taskID, int priority){
+     StatusType AddTask(int taskID, int priority){
         try {
-    		Task task(taskID, priority);
-            AVLTask avl(task);
-			HashResult result = IdHash.Insert(avl);
-			if (result == HASH_TABLE_DATA_ALREADY_EXIST) {
-				return FAILURE;
-			}
-            HeapTask heap(task);
-			MaxPriHeap.Insert(heap);
-			MinPriHeap.Insert(heap);
-		} catch (bad_alloc& b) {
-			return ALLOCATION_ERROR;
+    		AVLTask avl(taskID,priority);
+		HashResult result = IdHash.Insert(avl);
+		if (result == HASH_TABLE_DATA_ALREADY_EXIST) {
+			return FAILURE;
 		}
-		return SUCCESS;
+		AVLTask* avlP = IdHash.Find(avl);
+		HeapTask heap(taskID,priority);
+		heap.SetNode(avlP);
+		MaxPriHeap.Insert(heap);
+		MinPriHeap.Insert(heap);
+		int MaxHeapIndex=avlP->GetMaxIndex();
+		int MinHeapIndex=avlP->GetMinIndex();
+		if (MaxHeapIndex == -1){
+			MaxHeapIndex=MaxPriHeap.NumberOfElement();
+		}
+		if (MinHeapIndex == -1){
+			MinHeapIndex=MinPriHeap.NumberOfElement();
+		}
+		heap = MaxPriHeap.getElement(MaxHeapIndex);
+		avlP->SetMaxTask(&heap);
+		heap=MinPriHeap.getElement(MinHeapIndex);
+		avlP->SetMinTask(&heap);
+	} catch (bad_alloc& b) {
+		return ALLOCATION_ERROR;
+	}
+	return SUCCESS;
     }
     
     StatusType NextTask(int* taskID, int* priority){
