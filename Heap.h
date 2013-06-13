@@ -22,19 +22,19 @@ private:
     
 	/*Replace 2 elements in the array*/
 	void Swap(int i, int j) {
-	    if ((i > 0 && i <= numberOfElements) && (j > 0 && j <= numberOfElements)) {
-	   	T temp = array[i];
-		array[i] = array[j];
-	 	array[j] = temp;
-        	FObj.SetIndex(array+i, j);
-        	FObj.SetIndex(array+j, i);
-        	array[i].SetIndex(j);
-        	array[j].SetIndex(i);
-	    }
+		if ((i > 0 && i <= numberOfElements) && (j > 0 && j <= numberOfElements)) {
+			T temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+            FObj.SetIndex(array+i, j);
+            FObj.SetIndex(array+j, i);
+            array[i].SetIndex(j);
+            array[j].SetIndex(i);
+            
+		}
 	}
-
     
-/*Adds element to the Heap*/
+	/*Adds element to the Heap*/
 	void InsertElement(T data) {
 		array[numberOfElements + 1] = data;
 		numberOfElements++;
@@ -91,7 +91,6 @@ private:
 			delete[] temp;
 		}
 	}
-
     
 public:
 	/*Default c'tor*/
@@ -113,14 +112,13 @@ public:
 		delete[] array;
 	}
     
-	
-	T& getElement(int index) const{
+    T& getElement(int index) const{
 		if (index>0 && index<=numberOfElements){
 			return array[index];
 		}
 		return array[1];//if the index is out of range, return the first element.
 	}
-	
+    
 	void MakeHeap(T* myArray, int n) {
 		if (n == 0 || n == 1) {
 			size = 4;
@@ -140,7 +138,6 @@ public:
 	void Insert(T data) {
 		InsertElement(data);
 	}
-	
 	/*Removes The element in index at heap of type min or max.*/
 	void RemoveElement(int index) {
 		Swap(index, numberOfElements);
@@ -188,6 +185,7 @@ public:
 		return size;
 	}
     
+
     //Gets the K Biggest nodes at array.
 	void GetKBiggest(Heap<T, FuncObj>& heap, T* arr, int k) const {
 		if (k > numberOfElements) {
