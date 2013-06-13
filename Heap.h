@@ -116,6 +116,14 @@ public:
 		delete[] array;
 	}
     
+	
+	T& getElement(int index) const{
+		if (index<=numberOfElements){
+			return array[index];
+		}
+		return array[1];//if the index is out of range, return the first element.
+	}
+	
 	void MakeHeap(T* myArray, int n,string type) {
 		if (n == 0 || n == 1) {
 			size = 4;
