@@ -535,7 +535,7 @@ public:
 	 * gets a data copy of given element's data in tree.
 	 */
 	T* Find(const T& data) const {
-		assert(root!=NULL && root->dataIsIn(data));
+		assert(root!= NULL);// && root->dataIsIn(data));
 		return root->FindInNode(data);
 	}
     
