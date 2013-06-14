@@ -120,18 +120,19 @@ public:
     }
     
     StatusType Cancel (int taskID){
-/*        if (!IdHash.IsIn(taskID)) {
-			return FAILURE;
-		}
-		Task tmp(taskID);
-		Task* task = IdHash.Find(&tmp);
-		try	{
-			MaxPriHeap.RemoveElement(task->GetMaxHeapIndex(), "max");
-			MinPriHeap.RemoveElement(task->GetMinHeapIndex(), "min");
-			IdHash.Remove(&task);
-		} catch (bad_alloc& b) {
-			return ALLOCATION_ERROR;
-		}*/
+	AVLTask tmp(taskID);
+        if (!IdHash.IsIn(tmp)) {
+            return FAILURE;
+        }
+        AVLTask* hashTask = IdHash.Find(tmp);
+        
+         try	{
+         MaxPriHeap.RemoveElement(hashTask->GetMaxIndex());
+         MinPriHeap.RemoveElement(hashTask->GetMinIndex());
+         IdHash.Remove(tmp);
+         } catch (bad_alloc& b) {
+         return ALLOCATION_ERROR;
+         }
 		return SUCCESS;
     }
     
@@ -139,8 +140,7 @@ public:
         if (taskID == NULL || priority == NULL){
             return INVALID_INPUT;
         }
-        //get min-heap root
-        Task tmp = MinPriHeap.FindMax();//should change to the right heap function
+        Task tmp = MinPriHeap.FindMax();
         *taskID = tmp.GetId();
         *priority = tmp.GetPriority();
         return SUCCESS;
