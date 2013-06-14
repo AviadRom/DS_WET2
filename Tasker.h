@@ -25,7 +25,7 @@ private:
     MaxHeap MaxPriHeap;
     int NumberOfTasks;
 public:
- Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size),
+    Tasker (int size = 0, int taskIDs[] = NULL, int taskPriorities[] = NULL):IdHash(size),
     MinPriHeap(size), MaxPriHeap(size),NumberOfTasks(size){
         HeapTask* htArray = new HeapTask[size];
         for (int i = 0; i < size; i++){
@@ -38,9 +38,7 @@ public:
         MaxPriHeap.MakeHeap(htArray,size);
         MinPriHeap.MakeHeap(htArray,size);
         delete[] htArray;
-        
     }
-    /*Get&Set methods for any relevant class property*/
     
      StatusType AddTask(int taskID, int priority){
         try {
@@ -75,13 +73,16 @@ public:
     }
     
     StatusType NextTask(int* taskID, int* priority){
-     /*   if (taskID == NULL || priority == NULL) {
-			return FAILURE;
-		}
-		HeapTask tmp = MaxPriHeap.RemoveMaxElement();
-		//Also need to remove from MinHeap and Hash Table.
-		*taskID = tmp.GetId();
-		*priority = tmp.GetPriority();*/
+        if (taskID == NULL || priority == NULL) {
+            return FAILURE;
+        }
+        HeapTask tmp = MaxPriHeap.RemoveMaxElement();
+        AVLTask* hashTask = tmp.GetNode();
+        MinPriHeap.RemoveElement(hashTask->GetMinIndex());
+        IdHash.Remove(*hashTask);
+        HeapTask newMax = MaxPriHeap.FindMax();
+        *taskID = newMax.GetId();
+         *priority = newMax.GetPriority();
 		return SUCCESS;
     }
     
