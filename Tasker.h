@@ -40,7 +40,7 @@ public:
         delete[] htArray;
     }
     
-     StatusType AddTask(int taskID, int priority){
+      StatusType AddTask(int taskID, int priority){
         try {
     		AVLTask avl(taskID,priority);
 		HashResult result = IdHash.Insert(avl);
@@ -52,19 +52,15 @@ public:
 		heap.SetNode(avlP);
 		MaxPriHeap.Insert(heap);
 		MinPriHeap.Insert(heap);
-		int MaxHeapIndex=avlP->GetMaxIndex();
-		int MinHeapIndex=avlP->GetMinIndex();
-		if (MaxHeapIndex == -1) {
-			MaxHeapIndex = MaxPriHeap.NumberOfElement();
-			avlP->SetMaxIndex(MaxHeapIndex);
+		if (avlP->GetMaxIndex() == -1) {
+			avlP->SetMaxIndex(MaxPriHeap.NumberOfElement());
 		}
-		if (MinHeapIndex == -1) {
-			MinHeapIndex = MinPriHeap.NumberOfElement();
-			avlP->SetMinIndex(MinHeapIndex);
+		if (avlP->GetMinIndex() == -1) {
+			avlP->SetMinIndex(MinPriHeap.NumberOfElement());
 		}
-		heap = MaxPriHeap.getElement(MaxHeapIndex);
+		heap = MaxPriHeap.getElement(avlP->GetMaxIndex());
 		avlP->SetMaxTask(&heap);
-		heap=MinPriHeap.getElement(MinHeapIndex);
+		heap=MinPriHeap.getElement(avlP->GetMinIndex());
 		avlP->SetMinTask(&heap);
 	} catch (bad_alloc& b) {
 		return ALLOCATION_ERROR;
