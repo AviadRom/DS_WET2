@@ -171,7 +171,7 @@ public:
 	}
     
 	/*  gets copy of object with the maximum value*/
-	T FindMax() {
+	T& FindMax() {
 		return array[1];
 	}
     
