@@ -146,13 +146,22 @@ public:
         return SUCCESS;
     }
     
-    StatusType GetKthTask(int k, int* taskID, int* priority){
-        /*        if (taskID == NULL || priority == NULL || k > IdHash.GetNumOfElements() || k < 1){
-         return INVALID_INPUT;
-         }*/
-        // DO MAGIC
-        return SUCCESS;
-    }
+    StatusType GetKthTask(int k, int* taskID, int* priority) {
+	if (taskID == NULL || priority == NULL || k > IdHash.NumberOfElement()
+			|| k < 1) {
+		return INVALID_INPUT;
+	}
+	try {
+		MaxHeap heap(2 * k);
+		HeapTask* array = new HeapTask[k];
+		MaxPriHeap.GetKBiggest(heap, array, k);
+		*taskID = array[k - 1].GetId();
+		*priority = array[k - 1].GetPriority();
+	} catch (bad_alloc& b) {
+		return ALLOCATION_ERROR;
+	}
+	return SUCCESS;
+   }
     
     ~Tasker(){}
 };
