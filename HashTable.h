@@ -38,7 +38,7 @@ private:
 		if (factorSize >= 4.0) {
 			tableSize *= 2;
 		}
-        if (factorSize <= 1.0 && tableSize > 4){
+        if (factorSize <= 1.0){
             tableSize /= 2;
         }
         
@@ -89,15 +89,14 @@ public:
 			return HASH_TABLE_DATA_ALREADY_EXIST;
 		}
 		elements++;
-		ReBuild();
+        if (elements >= 3){
+            ReBuild();
+        }
 		return HASH_TABLE_SUCCESS;
 	}
 
     /*Removes an element from the hash table if it exists*/
     HashResult Remove(const T& data){
-        if (!IsIn(data)){
-            return HASH_TABLE_DATA_NOT_EXIST;
-        }
         hTable->Remove(data);
         elements--;
         ReBuild();
@@ -113,16 +112,20 @@ public:
 	}
     
 	/*gets the size of the table*/
-	int Size() const{return tableSize;}
+	int Size() const{
+        return tableSize;
+    }
     
 	/*gets the number of element in the hashTable*/
-	int NumberOfElement() const { return elements; }
+	int NumberOfElement() const {
+        return elements;
+    }
     
     
     
 	/*return true if data in the HashTable, other false*/
 	bool IsIn(T& data)const{
-		int index =HashFunction( func.GetId(data) );
+		int index = HashFunction(func.GetId(data));
 		return hTable[index].DataInTree(data);
 	}
     
