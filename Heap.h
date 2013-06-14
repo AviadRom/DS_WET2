@@ -150,7 +150,7 @@ public:
 	}
     
 	void Insert(T data) {
-		InsertElement(data);
+		InsertElement(data,true);
 	}
 	/*Removes The element in index at heap of type min or max.*/
 	void RemoveElement(int index) {
