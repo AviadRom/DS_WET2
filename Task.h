@@ -68,6 +68,7 @@ public:
         SetId(b.GetId());
         SetPriority(b.GetPriority());
         Index = b.GetIndex();
+        AVLNode = b.GetNode();
         return true;
     }
     
@@ -170,8 +171,14 @@ public:
 
 class TaskCmp{
 public:
-	bool operator()(const Task& a,const Task& b) const{
-		return a.Compare(b);
+	int operator()(const Task& a,const Task& b) const{
+		if (a.GetId() > b.GetId()){
+			return 1;
+		}
+		if (a.GetId() < b.GetId()){
+			return -1;
+		}
+		return 0;
 	}
 };
 
