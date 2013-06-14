@@ -64,7 +64,7 @@ public:
     
     HeapTask(Task& task): Task(task),AVLNode(NULL), Index(-1){};
     
-    const bool operator=(HeapTask& b){
+    const bool operator=(HeapTask b){
         SetId(b.GetId());
         SetPriority(b.GetPriority());
         Index = b.GetIndex();
