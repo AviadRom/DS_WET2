@@ -33,12 +33,21 @@ private:
             
 		}
 	}
+	
+	void SwapWithoutIndexChange(int i, int j) {
+		if ((i > 0 && i <= numberOfElements)
+				&& (j > 0 && j <= numberOfElements)) {
+			T temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+	}
     
 	/*Adds element to the Heap*/
-	void InsertElement(T data) {
+	void InsertElement(T data,bool changeIndex) {
 		array[numberOfElements + 1] = data;
 		numberOfElements++;
-		MakeSiftUp(numberOfElements);
+		MakeSiftUp(numberOfElements,changeIndex);
 		ChangeSize();
 	}
     
@@ -68,13 +77,18 @@ private:
     
 	/*  Sift up the element in the array at index i
 	 *  Input: i - the index where the data to sift up*/
-	void MakeSiftUp(int i) {
+	void MakeSiftUp(int i,bool changeIndex) {
 		if ((i < 2) || (i > numberOfElements)) {
 			return;
 		}
 		if (FObj.Compare(array[i], array[i / 2])) {
+			if (changeIndex){
 			Swap(i, i / 2);
-			MakeSiftUp(i / 2);
+		}
+		else {
+			SwapWithoutIndexChange(i,i/2);
+		}
+		MakeSiftUp(i / 2,changeIndex);
 		}
 	}
     
@@ -195,13 +209,13 @@ public:
 		arr[0] = array[1];
 		while (i < k) {
 			if (2 * j + 1 <= numberOfElements) {
-				heap.InsertElement(array[2 * j]);
-				heap.InsertElement(array[2 * j + 1]);
+				heap.InsertElement(array[2 * j],false);
+				heap.InsertElement(array[2 * j + 1],false);
 			} else if (2 * j <= numberOfElements) {
-				heap.InsertElement(array[2 * j]);
+				heap.InsertElement(array[2 * j],false);
 			}
 			arr[i] = heap.RemoveMaxElement();
-			j = FObj.GetIndex(arr[i]);
+			j = arr[i].GetIndex();
 			i++;
 		}
 	}
