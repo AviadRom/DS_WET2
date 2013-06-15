@@ -29,15 +29,15 @@ private:
 			array[i] = array[j];
 			array[j] = temp;
             
-           // array[i].SetIndex(j);
-           // array[j].SetIndex(i);
-
+            // array[i].SetIndex(j);
+            // array[j].SetIndex(i);
+            
 		}
 	}
 	
 	void SwapWithoutIndexChange(int i, int j) {
 		if ((i > 0 && i <= numberOfElements)
-				&& (j > 0 && j <= numberOfElements)) {
+            && (j > 0 && j <= numberOfElements)) {
 			T temp = array[i];
 			array[i] = array[j];
 			array[j] = temp;
@@ -84,12 +84,12 @@ private:
 		}
 		if (FObj.Compare(array[i], array[i / 2])) {
 			if (changeIndex){
-			Swap(i, i / 2);
-		}
-		else {
-			SwapWithoutIndexChange(i,i/2);
-		}
-		MakeSiftUp(i / 2,changeIndex);
+                Swap(i, i / 2);
+            }
+            else {
+                SwapWithoutIndexChange(i,i/2);
+            }
+            MakeSiftUp(i / 2,changeIndex);
 		}
 	}
     
@@ -204,7 +204,7 @@ public:
 		return size;
 	}
     
-
+    
     //Gets the K Biggest nodes at array.
 	void GetKBiggest(Heap<T, FuncObj>& heap, T* arr, int k) const {
 		if (k > numberOfElements) {
