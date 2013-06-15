@@ -39,5 +39,5 @@ StatusType GetKthTask(void* DS,int k,int* taskID,int* priority){
 void Quit(void** DS){
 	Tasker* tmp = (Tasker*)*DS;
 	delete tmp;
-	DS = NULL;
+	*DS = NULL;
 }
