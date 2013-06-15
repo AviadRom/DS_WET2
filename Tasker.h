@@ -72,19 +72,21 @@ public:
 	return SUCCESS;
     }
     
-    StatusType NextTask(int* taskID, int* priority){
+      StatusType NextTask(int* taskID, int* priority){
         if (taskID == NULL || priority == NULL) {
+            return INVALID_INPUT;
+        }
+        if (NumberOfTasks == 0){
             return FAILURE;
         }
-        HeapTask newMax = MaxPriHeap.FindMax();
-        *taskID = newMax.GetId();
-        *priority = newMax.GetPriority();
         HeapTask tmp = MaxPriHeap.RemoveMaxElement();
         AVLTask* hashTask = tmp.GetNode();
         MinPriHeap.RemoveElement(hashTask->GetMinIndex());
         IdHash.Remove(*hashTask);
+        *taskID = tmp.GetId();
+        *priority = tmp.GetPriority();
         NumberOfTasks--;
-      	return SUCCESS;
+		return SUCCESS;
     }
     
     StatusType SetPriority(int taskID, int priority) {
