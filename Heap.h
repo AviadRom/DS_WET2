@@ -23,14 +23,15 @@ private:
 	/*Replace 2 elements in the array*/
 	void Swap(int i, int j) {
 		if ((i > 0 && i <= numberOfElements) && (j > 0 && j <= numberOfElements)) {
+			FObj.SetIndex(array+i, j);
+			FObj.SetIndex(array+j, i);
 			T temp = array[i];
 			array[i] = array[j];
 			array[j] = temp;
-            FObj.SetIndex(array+i, j);
-            FObj.SetIndex(array+j, i);
-            array[i].SetIndex(j);
-            array[j].SetIndex(i);
             
+           // array[i].SetIndex(j);
+           // array[j].SetIndex(i);
+
 		}
 	}
 	
@@ -143,6 +144,7 @@ public:
 		array = new T[size];
 		for (int i = 1; i <= numberOfElements; i++) {
 			array[i] = myArray[i - 1];
+			FObj.SetIndex(array+i, i);
 		}
 		for (int i = numberOfElements / 2; i > 0; --i) {
 			MakeSiftDown(i);
