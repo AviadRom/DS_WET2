@@ -31,9 +31,12 @@ public:
         for (int i = 0; i < size; i++){
             AVLTask avl(taskIDs[i], taskPriorities[i]);
             IdHash.Insert(avl);
-            AVLTask* forHeap = IdHash.Find(avl);
-            HeapTask tmp(taskIDs[i], taskPriorities[i],forHeap);
-            htArray[i] = tmp;
+        }
+        for (int i=0;i<size;i++){
+        	AVLTask avl(taskIDs[i], taskPriorities[i]);
+        	AVLTask* forHeap = IdHash.Find(avl);
+        	HeapTask tmp(taskIDs[i], taskPriorities[i],forHeap);
+        	htArray[i] = tmp;
         }
         MaxPriHeap.MakeHeap(htArray,size);
         MinPriHeap.MakeHeap(htArray,size);
