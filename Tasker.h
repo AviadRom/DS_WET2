@@ -72,14 +72,14 @@ public:
         if (taskID == NULL || priority == NULL) {
             return FAILURE;
         }
+        HeapTask newMax = MaxPriHeap.FindMax();
+        *taskID = newMax.GetId();
+        *priority = newMax.GetPriority();
         HeapTask tmp = MaxPriHeap.RemoveMaxElement();
         AVLTask* hashTask = tmp.GetNode();
         MinPriHeap.RemoveElement(hashTask->GetMinIndex());
         IdHash.Remove(*hashTask);
-        HeapTask newMax = MaxPriHeap.FindMax();
-        *taskID = newMax.GetId();
-         *priority = newMax.GetPriority();
-		return SUCCESS;
+      	return SUCCESS;
     }
     
     StatusType SetPriority(int taskID, int priority) {
