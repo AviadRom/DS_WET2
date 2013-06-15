@@ -38,7 +38,7 @@ private:
 		if (factorSize >= 4.0) {
 			tableSize *= 2;
 		}
-        if (factorSize <= 1.0){
+        if (factorSize <= 1.0 && tableSize > 1){
             tableSize /= 2;
         }
         
@@ -97,7 +97,8 @@ public:
 
     /*Removes an element from the hash table if it exists*/
     HashResult Remove(const T& data){
-        hTable->Remove(data);
+        int index = HashFunction(data.GetId());
+        hTable[index].Remove(data);
         elements--;
         ReBuild();
         return HASH_TABLE_SUCCESS;
@@ -137,7 +138,7 @@ public:
 			hTable[i].GetTreeInArray(arr);
 			std::cout << i << ": ";
 			for (int j = 0; j < size; j++) {
-				std::cout <<"ID: "<< func.getId(arr[j]) << " Balance: "<< arr[j]->GetBalance() << " NumberOfAccounts: "<<func.getVal(arr[j])<< ",";
+				std::cout <<"ID: "<< func.GetId(arr[j]) << " Priority: "<<func.GetVal(arr[j])<< ",";
 			}
 			std::cout << endl;
 			delete[] arr;
