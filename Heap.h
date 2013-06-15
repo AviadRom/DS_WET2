@@ -154,6 +154,9 @@ public:
 	}
 	/*Removes The element in index at heap of type min or max.*/
 	void RemoveElement(int index) {
+		if (index == -1){
+			index=numberOfElements;
+		}
 		Swap(index, numberOfElements);
 		numberOfElements--;
 		MakeSiftDown(index);
