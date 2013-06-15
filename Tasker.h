@@ -72,14 +72,14 @@ public:
         return SUCCESS;
     }
     
-    StatusType NextTask(int* taskID, int* priority){
+     StatusType NextTask(int* taskID, int* priority){
         if (taskID == NULL || priority == NULL) {
             return INVALID_INPUT;
         }
         if (NumberOfTasks == 0){
             return FAILURE;
         }
-        HeapTask tmp = MaxPriHeap.RemoveMaxElement();
+        HeapTask tmp = MaxPriHeap.RemoveMaxElement(true);
         AVLTask* hashTask = tmp.GetNode();
         MinPriHeap.RemoveElement(hashTask->GetMinIndex());
         IdHash.Remove(*hashTask);
