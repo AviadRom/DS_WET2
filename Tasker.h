@@ -65,6 +65,7 @@ public:
 	} catch (bad_alloc& b) {
 		return ALLOCATION_ERROR;
 	}
+	NumberOfTasks++;
 	return SUCCESS;
     }
     
@@ -79,6 +80,7 @@ public:
         AVLTask* hashTask = tmp.GetNode();
         MinPriHeap.RemoveElement(hashTask->GetMinIndex());
         IdHash.Remove(*hashTask);
+        NumberOfTasks--;
       	return SUCCESS;
     }
     
@@ -129,6 +131,7 @@ public:
          } catch (bad_alloc& b) {
          return ALLOCATION_ERROR;
          }
+         NumberOfTasks--;
 		return SUCCESS;
     }
     
