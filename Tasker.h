@@ -43,36 +43,36 @@ public:
         delete[] htArray;
     }
     
-      StatusType AddTask(int taskID, int priority){
+    StatusType AddTask(int taskID, int priority){
         try {
     		AVLTask avl(taskID,priority);
-		HashResult result = IdHash.Insert(avl);
-		if (result == HASH_TABLE_DATA_ALREADY_EXIST) {
-			return FAILURE;
-		}
-		AVLTask* avlP = IdHash.Find(avl);
-		HeapTask heap(taskID,priority);
-		heap.SetNode(avlP);
-		MaxPriHeap.Insert(heap);
-		MinPriHeap.Insert(heap);
-		if (avlP->GetMaxIndex() == -1) {
-			avlP->SetMaxIndex(MaxPriHeap.NumberOfElement());
-		}
-		if (avlP->GetMinIndex() == -1) {
-			avlP->SetMinIndex(MinPriHeap.NumberOfElement());
-		}
-		heap = MaxPriHeap.getElement(avlP->GetMaxIndex());
-		avlP->SetMaxTask(&heap);
-		heap=MinPriHeap.getElement(avlP->GetMinIndex());
-		avlP->SetMinTask(&heap);
-	} catch (bad_alloc& b) {
-		return ALLOCATION_ERROR;
-	}
-	NumberOfTasks++;
-	return SUCCESS;
+            HashResult result = IdHash.Insert(avl);
+            if (result == HASH_TABLE_DATA_ALREADY_EXIST) {
+                return FAILURE;
+            }
+            AVLTask* avlP = IdHash.Find(avl);
+            HeapTask heap(taskID,priority);
+            heap.SetNode(avlP);
+            MaxPriHeap.Insert(heap);
+            MinPriHeap.Insert(heap);
+            if (avlP->GetMaxIndex() == -1) {
+                avlP->SetMaxIndex(MaxPriHeap.NumberOfElement());
+            }
+            if (avlP->GetMinIndex() == -1) {
+                avlP->SetMinIndex(MinPriHeap.NumberOfElement());
+            }
+            heap = MaxPriHeap.getElement(avlP->GetMaxIndex());
+            avlP->SetMaxTask(&heap);
+            heap=MinPriHeap.getElement(avlP->GetMinIndex());
+            avlP->SetMinTask(&heap);
+        } catch (bad_alloc& b) {
+            return ALLOCATION_ERROR;
+        }
+        NumberOfTasks++;
+        return SUCCESS;
     }
     
-      StatusType NextTask(int* taskID, int* priority){
+    StatusType NextTask(int* taskID, int* priority){
         if (taskID == NULL || priority == NULL) {
             return INVALID_INPUT;
         }
@@ -90,53 +90,53 @@ public:
     }
     
     StatusType SetPriority(int taskID, int priority) {
-	AVLTask tmp(taskID, priority);
-	if (!IdHash.IsIn(tmp)) {
-		return FAILURE;
-	}
-	try {
-		AVLTask* hashP = IdHash.Find(tmp);
-		int MaxHeapIndex = hashP->GetMaxIndex();
-		int MinHeapIndex = hashP->GetMinIndex();
-		MaxPriHeap.RemoveElement(MaxHeapIndex);
-		MinPriHeap.RemoveElement(MinHeapIndex);
-		HeapTask heap(taskID, priority, hashP);
-		hashP->SetMaxIndex(-1);
-		hashP->SetMinIndex(-1);
-		MaxPriHeap.Insert(heap);
-		MinPriHeap.Insert(heap);
-		hashP->SetPriority(priority);
-		MaxHeapIndex = hashP->GetMaxIndex();
-		MinHeapIndex = hashP->GetMinIndex();
-		if (MaxHeapIndex == -1) {
-			MaxHeapIndex = MaxPriHeap.NumberOfElement();
-			hashP->SetMaxIndex(MaxHeapIndex);
-		}
-		if (MinHeapIndex == -1) {
-			MinHeapIndex = MinPriHeap.NumberOfElement();
-			hashP->SetMinIndex(MinHeapIndex);
-		}
-	} catch (bad_alloc& b) {
-		return ALLOCATION_ERROR;
-	}
-	return SUCCESS;
+        AVLTask tmp(taskID, priority);
+        if (!IdHash.IsIn(tmp)) {
+            return FAILURE;
+        }
+        try {
+            AVLTask* hashP = IdHash.Find(tmp);
+            int MaxHeapIndex = hashP->GetMaxIndex();
+            int MinHeapIndex = hashP->GetMinIndex();
+            MaxPriHeap.RemoveElement(MaxHeapIndex);
+            MinPriHeap.RemoveElement(MinHeapIndex);
+            HeapTask heap(taskID, priority, hashP);
+            hashP->SetMaxIndex(-1);
+            hashP->SetMinIndex(-1);
+            MaxPriHeap.Insert(heap);
+            MinPriHeap.Insert(heap);
+            hashP->SetPriority(priority);
+            MaxHeapIndex = hashP->GetMaxIndex();
+            MinHeapIndex = hashP->GetMinIndex();
+            if (MaxHeapIndex == -1) {
+                MaxHeapIndex = MaxPriHeap.NumberOfElement();
+                hashP->SetMaxIndex(MaxHeapIndex);
+            }
+            if (MinHeapIndex == -1) {
+                MinHeapIndex = MinPriHeap.NumberOfElement();
+                hashP->SetMinIndex(MinHeapIndex);
+            }
+        } catch (bad_alloc& b) {
+            return ALLOCATION_ERROR;
+        }
+        return SUCCESS;
     }
     
     StatusType Cancel (int taskID){
-	AVLTask tmp(taskID);
+        AVLTask tmp(taskID);
         if (!IdHash.IsIn(tmp)) {
             return FAILURE;
         }
         AVLTask* hashTask = IdHash.Find(tmp);
         
-         try	{
-         MaxPriHeap.RemoveElement(hashTask->GetMaxIndex());
-         MinPriHeap.RemoveElement(hashTask->GetMinIndex());
-         IdHash.Remove(tmp);
-         } catch (bad_alloc& b) {
-         return ALLOCATION_ERROR;
-         }
-         NumberOfTasks--;
+        try	{
+            MaxPriHeap.RemoveElement(hashTask->GetMaxIndex());
+            MinPriHeap.RemoveElement(hashTask->GetMinIndex());
+            IdHash.Remove(tmp);
+        } catch (bad_alloc& b) {
+            return ALLOCATION_ERROR;
+        }
+        NumberOfTasks--;
 		return SUCCESS;
     }
     
@@ -151,21 +151,21 @@ public:
     }
     
     StatusType GetKthTask(int k, int* taskID, int* priority) {
-	if (taskID == NULL || priority == NULL || k > IdHash.NumberOfElement()
+        if (taskID == NULL || priority == NULL || k > IdHash.NumberOfElement()
 			|| k < 1) {
-		return INVALID_INPUT;
-	}
-	try {
-		MaxHeap heap(2 * k);
-		HeapTask* array = new HeapTask[k];
-		MaxPriHeap.GetKBiggest(heap, array, k);
-		*taskID = array[k - 1].GetId();
-		*priority = array[k - 1].GetPriority();
-	} catch (bad_alloc& b) {
-		return ALLOCATION_ERROR;
-	}
-	return SUCCESS;
-   }
+            return INVALID_INPUT;
+        }
+        try {
+            MaxHeap heap(2 * k);
+            HeapTask* array = new HeapTask[k];
+            MaxPriHeap.GetKBiggest(heap, array, k);
+            *taskID = array[k - 1].GetId();
+            *priority = array[k - 1].GetPriority();
+        } catch (bad_alloc& b) {
+            return ALLOCATION_ERROR;
+        }
+        return SUCCESS;
+    }
     
     ~Tasker(){}
 };
