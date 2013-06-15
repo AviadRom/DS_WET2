@@ -258,7 +258,7 @@ public:
 	}
     bool Compare(Task& a, Task& b){
         if  (a.GetPriority() == b.GetPriority()){
-            if (a.GetId() > b.GetId()){
+            if (a.GetId() < b.GetId()){
                 return true;
             }
             return false;
