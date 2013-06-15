@@ -54,24 +54,36 @@ private:
     
 	/*  Sift down the element in the array at index i
 	 *  Input: i - the index where the data to sift down*/
-	void MakeSiftDown(int i) {
+	void MakeSiftDown(int i, bool changeIndex) {
 		if (i < 1) {
 			return;
 		}
 		if (2 * i + 1 <= numberOfElements) {
 			if (FObj.Compare(array[2 * i], array[i])
-                || FObj.Compare(array[2 * i + 1], array[i])) {
+					|| FObj.Compare(array[2 * i + 1], array[i])) {
 				if (FObj.Compare(array[2 * i], array[2 * i + 1])) {
-					Swap(i, 2 * i);
-					MakeSiftDown(2 * i);
+					if (changeIndex) {
+						Swap(i, 2 * i);
+					} else {
+						SwapWithoutIndexChange(i, 2 * i);
+					}
+					MakeSiftDown(2 * i, changeIndex);
 				} else {
-					Swap(i, 2 * i + 1);
-					MakeSiftDown(2 * i + 1);
+					if (changeIndex) {
+						Swap(i, 2 * i + 1);
+					} else {
+						SwapWithoutIndexChange(i, 2 * i + 1);
+					}
+					MakeSiftDown(2 * i + 1, changeIndex);
 				}
 			}
 		} else if (2 * i <= numberOfElements) {
 			if (FObj.Compare(array[2 * i], array[i])) {
-				Swap(i, 2 * i);
+				if (changeIndex) {
+					Swap(i, 2 * i);
+				} else {
+					SwapWithoutIndexChange(i, 2 * i);
+				}
 			}
 		}
 	}
@@ -144,10 +156,10 @@ public:
 		array = new T[size];
 		for (int i = 1; i <= numberOfElements; i++) {
 			array[i] = myArray[i - 1];
-			FObj.SetIndex(array+i, i);
+			FObj.SetIndex(array + i, i);
 		}
 		for (int i = numberOfElements / 2; i > 0; --i) {
-			MakeSiftDown(i);
+			MakeSiftDown(i,true);
 		}
 	}
     
@@ -156,21 +168,29 @@ public:
 	}
 	/*Removes The element in index at heap of type min or max.*/
 	void RemoveElement(int index) {
-		if (index == -1){
-			index=numberOfElements;
+		if (index == -1) {
+			index = numberOfElements;
 		}
 		Swap(index, numberOfElements);
 		numberOfElements--;
-		MakeSiftDown(index);
+		MakeSiftDown(index,true);
 		ChangeSize();
 	}
     
 	/*Delete the biggest element at the Heap*/
-	T RemoveMaxElement() {
+	T RemoveMaxElement(bool changeIndex) {
 		T ret = array[1];
-		Swap(1, numberOfElements);
+		if (changeIndex) {
+			Swap(1, numberOfElements);
+		} else {
+			SwapWithoutIndexChange(1, numberOfElements);
+		}
 		numberOfElements--;
-		MakeSiftDown(1);
+		if (changeIndex) {
+			MakeSiftDown(1, true);
+		} else {
+			MakeSiftDown(1, false);
+		}
 		return ret;
 	}
     
@@ -185,7 +205,7 @@ public:
 		if (change >= 0) {
 			MakeSiftUp(i);
 		} else {
-			MakeSiftDown(i);
+			MakeSiftDown(i,true);
 		}
 	}
     
@@ -214,12 +234,12 @@ public:
 		arr[0] = array[1];
 		while (i < k) {
 			if (2 * j + 1 <= numberOfElements) {
-				heap.InsertElement(array[2 * j],false);
-				heap.InsertElement(array[2 * j + 1],false);
+				heap.InsertElement(array[2 * j], false);
+				heap.InsertElement(array[2 * j + 1], false);
 			} else if (2 * j <= numberOfElements) {
-				heap.InsertElement(array[2 * j],false);
+				heap.InsertElement(array[2 * j], false);
 			}
-			arr[i] = heap.RemoveMaxElement();
+			arr[i] = heap.RemoveMaxElement(false);
 			j = arr[i].GetIndex();
 			i++;
 		}
