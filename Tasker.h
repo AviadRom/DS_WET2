@@ -144,6 +144,9 @@ public:
         if (taskID == NULL || priority == NULL){
             return INVALID_INPUT;
         }
+        if (NumberOfTasks == 0){
+        	return FAILURE;
+        }
         Task tmp = MinPriHeap.FindMax();
         *taskID = tmp.GetId();
         *priority = tmp.GetPriority();
