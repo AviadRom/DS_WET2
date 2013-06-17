@@ -64,7 +64,7 @@ private:
 	}
     
 public:
-	// Default c'tor
+	// Default C'tor
 	HashTable(int n):elements(0),hTable(NULL),tableSize(2*n){
 		if(n==0){
 			tableSize=4;
@@ -72,13 +72,13 @@ public:
 		hTable=new AVLTree<T, CmpFunc> [tableSize];
 	}
     
-	/*Default d'tor*/
+	//Default D'tor
 	~HashTable(){
 		delete[] hTable;
 	}
     
 	/*Adds an element to the hash table
-	 *   Input: data - element of the hash table.
+	 *  Input: data - element of the hash table.
 	 *
 	 *	Output: HashResult.
 	 *			HASH_TABLE_SUCCESS-in case of success
@@ -95,42 +95,44 @@ public:
 		return HASH_TABLE_SUCCESS;
 	}
 
-    /*Removes an element from the hash table if it exists*/
+    //Removes an element from the hash table if it exists
     HashResult Remove(const T& data){
         int index = HashFunction(data.GetId());
         hTable[index].Remove(data);
         elements--;
-        ReBuild();
+        if (elements >= 3){
+            ReBuild();
+        }
         return HASH_TABLE_SUCCESS;
     }
     
-	/*finds an element in the hashTable, assuming the element is in the HashTable
-	 *  gets a data copy of given element's data in HashTable.
-	 * */
+	//Finds an element in the hashTable, assuming the element is in the HashTable
+    // gets a data copy of given element's data in HashTable.
 	T* Find(T& data){
 		int index = HashFunction(func.GetId(data)) ;
 		return hTable[index].Find(data);
 	}
     
-	/*gets the size of the table*/
+	//Gets the size of the table
 	int Size() const{
         return tableSize;
     }
     
-	/*gets the number of element in the hashTable*/
+	//Gets the number of element in the hashTable
 	int NumberOfElement() const {
         return elements;
     }
     
     
     
-	/*return true if data in the HashTable, other false*/
+	//Return true if data in the HashTable, otherwise false
 	bool IsIn(T& data)const{
 		int index = HashFunction(func.GetId(data));
 		return hTable[index].DataInTree(data);
 	}
     
-	/*print all the elements at the hashTable */
+	//Print all the elements at the hashTable
+    //This was used for debugging purposes
 	void print(){
 		for (int i = 0; i < tableSize; i++) {
 			int size = hTable[i].GetTreeSize();
