@@ -20,7 +20,7 @@ private:
 	T* array;
 	FuncObj FObj;
     
-	/*Replace 2 elements in the array*/
+	//Replace 2 elements in the array
 	void Swap(int i, int j) {
 		if ((i > 0 && i <= numberOfElements) && (j > 0 && j <= numberOfElements)) {
 			FObj.SetIndex(array+i, j);
@@ -28,10 +28,6 @@ private:
 			T temp = array[i];
 			array[i] = array[j];
 			array[j] = temp;
-            
-            // array[i].SetIndex(j);
-            // array[j].SetIndex(i);
-            
 		}
 	}
 	
@@ -44,8 +40,8 @@ private:
 		}
 	}
     
-	/*Adds element to the Heap*/
-	void InsertElement(T data,bool changeIndex) {
+	//Adds element to the Heap
+	void InsertElement(T& data,bool changeIndex) {
 		array[numberOfElements + 1] = data;
 		numberOfElements++;
 		MakeSiftUp(numberOfElements,changeIndex);
@@ -53,14 +49,16 @@ private:
 	}
     
 	/*  Sift down the element in the array at index i
-	 *  Input: i - the index where the data to sift down*/
+	 *  Input: i - the index where the data to sift down
+     *         changeIndex- wether or not use the regular swap or swap without index change
+     */
 	void MakeSiftDown(int i, bool changeIndex) {
 		if (i < 1) {
 			return;
 		}
 		if (2 * i + 1 <= numberOfElements) {
 			if (FObj.Compare(array[2 * i], array[i])
-					|| FObj.Compare(array[2 * i + 1], array[i])) {
+                || FObj.Compare(array[2 * i + 1], array[i])) {
 				if (FObj.Compare(array[2 * i], array[2 * i + 1])) {
 					if (changeIndex) {
 						Swap(i, 2 * i);
@@ -89,7 +87,9 @@ private:
 	}
     
 	/*  Sift up the element in the array at index i
-	 *  Input: i - the index where the data to sift up*/
+	 *  Input: i - the index where the data to sift up
+     *         changeIndex- wether or not use the regular swap or swap without index change
+     */
 	void MakeSiftUp(int i,bool changeIndex) {
 		if ((i < 2) || (i > numberOfElements)) {
 			return;
@@ -105,7 +105,7 @@ private:
 		}
 	}
     
-	/*doing a standard  3/4 resize for a dynamic array.*/
+	//doing a standard  3/4 resize for a dynamic array
 	void ChangeSize() {
 		double factorSize = (double) numberOfElements / size;
 		if (factorSize >= 0.75) {
@@ -120,12 +120,12 @@ private:
 	}
     
 public:
-	/*Default c'tor*/
+	//Default C'tor
 	Heap() :
     size(0), numberOfElements(0), array(NULL) {
 	}
     
-	/*c'tor*/
+	//C'tor
 	Heap(int n) :
     size(2 * n + 1), numberOfElements(0) {
 		if (n == 0) {
@@ -134,16 +134,18 @@ public:
 		array = new T[size];
 	}
     
-	/*d'tor*/
+	//D'tor
 	~Heap() {
 		delete[] array;
 	}
     
+    //Get the data of element in array[index]
+    //if the index is out of range, return the first element.
     T& getElement(int index) const{
 		if (index>0 && index<=numberOfElements){
 			return array[index];
 		}
-		return array[1];//if the index is out of range, return the first element.
+		return array[1];
 	}
     
 	void MakeHeap(T* myArray, int n) {
@@ -163,10 +165,11 @@ public:
 		}
 	}
     
-	void Insert(T data) {
+    //Insert data to heap
+	void Insert(T& data) {
 		InsertElement(data,true);
 	}
-	/*Removes The element in index at heap of type min or max.*/
+	//Removes The element in index at heap
 	void RemoveElement(int index) {
 		if (index == -1) {
 			index = numberOfElements;
@@ -177,7 +180,7 @@ public:
 		ChangeSize();
 	}
     
-	/*Delete the biggest element at the Heap*/
+	//Delete the biggest element at the Heap according to compare functions
 	T RemoveMaxElement(bool changeIndex) {
 		T ret = array[1];
 		if (changeIndex) {
@@ -194,38 +197,23 @@ public:
 		return ret;
 	}
     
-	/*  Change a key or any other data (of type int) in an object at the index i
-	 *  Input: i - the index where the object to change
-	 *  	   change - how big is the change*/
-	void ChangeKeyValue(int i, int change) {
-		if ((i < 1) || (i > numberOfElements)) {
-			return;
-		}
-		FObj.AddVal(array[i], change);
-		if (change >= 0) {
-			MakeSiftUp(i);
-		} else {
-			MakeSiftDown(i,true);
-		}
-	}
-    
-	/*  gets copy of object with the maximum value*/
+	//Gets a reference to the object with the maximum value
 	T& FindMax() {
 		return array[1];
 	}
     
-	/*Gets the number of element in the heap*/
+	//Gets the number of elements in the heap
 	int NumberOfElement() const {
 		return numberOfElements;
 	}
     
-	/*Gets the size of the array*/
+	//Gets the size of the array
 	int GetArraySize() const {
 		return size;
 	}
     
     
-    //Gets the K Biggest nodes at array.
+    //Gets the K Biggest nodes at array to a provided pre-allocated array
 	void GetKBiggest(Heap<T, FuncObj>& heap, T* arr, int k) const {
 		if (k > numberOfElements) {
 			return;
