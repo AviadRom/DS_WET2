@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <assert.h>
 using namespace std;
+#include "Task.h"
 
 typedef enum {
 	AVL_TREE_SUCCESS,
@@ -22,7 +23,6 @@ typedef enum {
 typedef enum {
 	ROOT, NO_SONS, LEFT_SON, RIGHT_SON, TWO_SONS
 } NodeStatus;
-
 
 static int GetBigger(int a, int b) {
 	if (a >= b) {
@@ -40,7 +40,7 @@ private:
 	T data;
 	int nodeHeight;
 	CmpFunc comperFunc;
-    
+
 	/*assuming sons are with correct height - corrects current height */
 	void currectNodeHeight() {
 		if (!leftSon && !rightSon) {
@@ -57,7 +57,7 @@ private:
 		}
 		nodeHeight = GetBigger(leftHeight, rightHeight) + 1;
 	}
-    
+
 	/*find a given data's node
 	 * param: 	data
 	 * output: 	ptr to matched node, null if not found
@@ -81,7 +81,7 @@ private:
 			}
 		}
 	}
-    
+
 	/*gets node sons status/
 	 * output: 	one of: NO_SONS, RIGHT_SON, LEFT_SON, TWO_SONS
 	 * */
@@ -94,7 +94,7 @@ private:
 			return LEFT_SON;
 		return TWO_SONS;
 	}
-    
+
 	/*gets node status
 	 * output:	one of: ROOT,RIGHT_SON,LEFT_SON
 	 * */
@@ -105,7 +105,7 @@ private:
 			return RIGHT_SON;
 		return LEFT_SON;
 	}
-    
+
 	/*gets minimum node at the tree
 	 * output: ptr to the matched node.
 	 * */
@@ -116,18 +116,18 @@ private:
 		}
 		return current;
 	}
-    
+
 	/*gets maximum node at the tree
 	 * output:	ptr to the matched node
 	 * */
-	AVLNode* GetMaximumNode(){
+	AVLNode* GetMaximumNode() {
 		AVLNode* current(this);
-		while(current->rightSon != NULL){
-			current=current->rightSon;
+		while (current->rightSon != NULL) {
+			current = current->rightSon;
 		}
 		return current;
 	}
-    
+
 	/*gets the following node in ascending order
 	 * output:	ptr to the matched node. null if not found
 	 * */
@@ -143,7 +143,7 @@ private:
 		}
 		return this->rightSon->GetMinimumNode();
 	}
-    
+
 	/*calculates the balance factor of node*/
 	int BF() const {
 		int rightHeight = -1;
@@ -154,19 +154,19 @@ private:
 			rightHeight = rightSon->nodeHeight;
 		return leftHeight - rightHeight;
 	}
-    
+
 	bool operator==(const AVLNode& node) const {
-		return comperFunc(*data, *node.data) == 0;
+		return comperFunc(data, node.data) == 0;
 	}
-    
+
 	bool operator<(const AVLNode& node) const {
-		return comperFunc(*data, *node.data) == -1;
+		return comperFunc(data, node.data) == -1;
 	}
-    
+
 	bool operator>(const AVLNode& node) const {
-		return comperFunc(*data, *node.data) == 1;
+		return comperFunc(data, node.data) == 1;
 	}
-    
+
 	/*assuming the sons are with correct sons tree*/
 	void LL() {
 		//save info
@@ -178,12 +178,25 @@ private:
 			AL = A->leftSon;
 			AR = A->rightSon;
 		}
-        
+
+		if (this->data.GetMinTask()) {
+			((this->data.GetMinTask())->changeAVLNode(&(this->leftSon->data)));
+		}
+		if (this->data.GetMaxTask()) {
+			((this->data.GetMaxTask())->changeAVLNode(&(this->leftSon->data)));
+		}
+		if (this->leftSon->data.GetMinTask()) {
+			((this->leftSon->data.GetMinTask())->changeAVLNode(&(this->data)));
+		}
+		if (this->leftSon->data.GetMaxTask()) {
+			((this->leftSon->data.GetMaxTask())->changeAVLNode(&(this->data)));
+		}
+
 		//change B To A
 		data = Adata;
 		leftSon = AL;
 		rightSon = A;
-        
+
 		//change A To B
 		A->data = Bdata;
 		A->leftSon = AR;
@@ -194,11 +207,11 @@ private:
 		if (BR) {
 			BR->father = A;
 		}
-        
+
 		A->currectNodeHeight();
 		B->currectNodeHeight();
 	}
-    
+
 	/*assuming the sons are with correct sons tree*/
 	void RR() {
 		//save info
@@ -210,38 +223,50 @@ private:
 			BR = B->rightSon;
 		}
 		T AData(A->data), BData(B->data);
-        
+
+		if (this->data.GetMinTask()) {
+			((this->data.GetMinTask())->changeAVLNode(&(this->rightSon->data)));
+		}
+		if (this->data.GetMaxTask()) {
+			((this->data.GetMaxTask())->changeAVLNode(&(this->rightSon->data)));
+		}
+		if (this->rightSon->data.GetMinTask()) {
+			((this->rightSon->data.GetMinTask())->changeAVLNode(&(this->data)));
+		}
+		if (this->rightSon->data.GetMaxTask()) {
+			((this->rightSon->data.GetMaxTask())->changeAVLNode(&(this->data)));
+		}
 		//change A to B
 		data = BData;
 		leftSon = B;
 		rightSon = BR;
-        
+
 		//change B to A
 		B->data = AData;
 		B->rightSon = BL;
 		B->leftSon = AL;
-        
+
 		if (BR) {
 			BR->father = A;
 		}
 		if (AL) {
 			AL->father = B;
 		}
-        
+
 		B->currectNodeHeight();
 		A->currectNodeHeight();
 	}
-    
+
 	void LR() {
 		leftSon->RR();
 		this->LL();
 	}
-    
+
 	void RL() {
 		rightSon->LL();
 		this->RR();
 	}
-    
+
 	/*checks the balance factor and do one roll*/
 	void chooseAndDoRolls() {
 		if (BF() == -2) {
@@ -258,7 +283,7 @@ private:
 			}
 		}
 	}
-    
+
 	//go over the path from given node to the root, and correct the tree.
 	void correctNode() {
 		AVLNode* currentNode(this);
@@ -268,20 +293,24 @@ private:
 			currentNode = currentNode->father;
 		}
 	}
-    
+
 public:
 	//c'tor
 	AVLNode(const T& newData, AVLNode *father = NULL) :
-    father(father), leftSon(NULL), rightSon(NULL), data(newData), nodeHeight(
-                                                                             0) {
+			father(father), leftSon(NULL), rightSon(NULL), data(newData), nodeHeight(
+					0) {
 	}
-    
+
 	//d'tor
 	~AVLNode() {
 		delete leftSon;
 		delete rightSon;
 	}
-    
+
+	T& getData(){
+		return data;
+	}
+
 	/*insert new data to the tree*/
 	void insertToNode(const T& newData) {
 		if (!dataIsIn(newData)) {
@@ -289,323 +318,368 @@ public:
 			if (*this > elementToInsert) {
 				if (leftSon == NULL) {
 					leftSon = new AVLNode(newData, this);
-				} else {
-					leftSon->insertToNode(newData);
+					if (newData.GetMinTask() != NULL) {
+						newData.GetMinTask()->changeAVLNode(&(leftSon->getData()));
+					}
+					if (newData.GetMaxTask() != NULL) {
+						newData.GetMaxTask()->changeAVLNode(&(leftSon->getData()));
+					}
+
+
+			} else {
+				leftSon->insertToNode(newData);
+			}
+		} else {
+			if (rightSon == NULL) {
+				rightSon = new AVLNode(newData, this);
+				if (newData.GetMinTask() != NULL) {
+					newData.GetMinTask()->changeAVLNode(&(rightSon->getData()));
+				}
+				if (newData.GetMaxTask() != NULL) {
+					newData.GetMaxTask()->changeAVLNode(&(rightSon->getData()));
 				}
 			} else {
-				if (rightSon == NULL) {
-					rightSon = new AVLNode(newData, this);
-				} else {
-					rightSon->insertToNode(newData);
-				}
+				rightSon->insertToNode(newData);
 			}
-			currectNodeHeight();
-			chooseAndDoRolls();
 		}
+		currectNodeHeight();
+		chooseAndDoRolls();
 	}
-    
-	//gets a copy of the minimum data at the tree
-	T GetMinimumData(){
-		return GetMinimumNode()->data;
 	}
-    
-	//gets a copy of the maximum data at the tree
-	T GetMaximumData(){
-		return GetMaximumNode()->data;
+
+//gets a copy of the minimum data at the tree
+T GetMinimumData() {
+	return GetMinimumNode()->data;
+}
+
+//gets a copy of the maximum data at the tree
+T GetMaximumData() {
+	return GetMaximumNode()->data;
+}
+
+/*assuming the data in the tree
+ *gets a copy of given data in node
+ */
+T* FindInNode(const T& Data) {
+	AVLNode elementToSearch(Data);
+	if (*this > elementToSearch) {
+		return leftSon->FindInNode(Data);
+	} else if (*this < elementToSearch) {
+		return rightSon->FindInNode(Data);
 	}
-    
-	/*assuming the data in the tree
-	 *gets a copy of given data in node
-	 */
-	T& FindInNode(const T& Data) {
-		AVLNode elementToSearch(Data);
-		if (*this > elementToSearch) {
-			return leftSon->FindInNode(Data);
-		} else if (*this < elementToSearch) {
-			return rightSon->FindInNode(Data);
-		}
-		return this->data;
+	return &(this->data);
+}
+
+/* deletes Node and corrects tree */
+void removeFromNode(const T& DataToRemove) {
+	if (!dataIsIn(DataToRemove)) {
+		return;
 	}
-    
-	/* deletes Node and corrects tree */
-	void removeFromNode(const T& DataToRemove) {
-		if (!dataIsIn(DataToRemove)) {
+	AVLNode* nodeToRemove = this->FindNode(DataToRemove);
+	NodeStatus sonsStatus = nodeToRemove->GetNodeSonsStatus();
+	NodeStatus nodeStatus = nodeToRemove->GetNodeStatus();
+	//NO SONS
+	if (sonsStatus == NO_SONS) {
+		if (nodeToRemove->father == NULL) {
 			return;
 		}
-		AVLNode* nodeToRemove = this->FindNode(DataToRemove);
-		NodeStatus sonsStatus = nodeToRemove->GetNodeSonsStatus();
-		NodeStatus nodeStatus = nodeToRemove->GetNodeStatus();
-		//NO SONS
-		if (sonsStatus == NO_SONS) {
-			if (nodeToRemove->father == NULL) {
-				return;
+		if (nodeStatus == RIGHT_SON) {
+			nodeToRemove->father->rightSon = NULL;
+		}
+		if (nodeStatus == LEFT_SON) {
+			nodeToRemove->father->leftSon = NULL;
+		}
+		nodeToRemove->father->correctNode();
+		delete nodeToRemove;
+		return;
+	}
+	//ONE_SON
+	if (sonsStatus == RIGHT_SON || sonsStatus == LEFT_SON) {
+		AVLNode* son;
+		if (sonsStatus == RIGHT_SON) {
+			son = nodeToRemove->rightSon;
+		} else {
+			son = nodeToRemove->leftSon;
+		}
+		if (nodeStatus == ROOT) {
+
+			if (son->data.GetMinTask()) {
+				((son->data.GetMinTask())->changeAVLNode(&(nodeToRemove->data)));
 			}
+			if (son->data.GetMaxTask()) {
+				((son->data.GetMaxTask())->changeAVLNode(&(nodeToRemove->data)));
+			}
+
+			*nodeToRemove = *son;
+
+			delete son;
+			nodeToRemove->father = NULL;
+			if (nodeToRemove->leftSon) {
+				nodeToRemove->leftSon->father = nodeToRemove;
+			}
+			if (nodeToRemove->rightSon) {
+				nodeToRemove->rightSon->father = nodeToRemove;
+			}
+			return;
+		} else {
 			if (nodeStatus == RIGHT_SON) {
-				nodeToRemove->father->rightSon = NULL;
+				nodeToRemove->father->rightSon = son;
+			} else {
+				nodeToRemove->father->leftSon = son;
 			}
-			if (nodeStatus == LEFT_SON) {
-				nodeToRemove->father->leftSon = NULL;
-			}
-			nodeToRemove->father->correctNode();
+			son->father = nodeToRemove->father;
+			nodeToRemove->leftSon = NULL;
+			nodeToRemove->rightSon = NULL;
 			delete nodeToRemove;
+			son->father->correctNode();
+
 			return;
 		}
-		//ONE_SON
-		if (sonsStatus == RIGHT_SON || sonsStatus == LEFT_SON) {
-			AVLNode* son;
-			if (sonsStatus == RIGHT_SON) {
-				son = nodeToRemove->rightSon;
-			} else {
-				son = nodeToRemove->leftSon;
-			}
-			if (nodeStatus == ROOT) {
-				*nodeToRemove = *son;
-				delete son;
-				nodeToRemove->father = NULL;
-				if (nodeToRemove->leftSon) {
-					nodeToRemove->leftSon->father = nodeToRemove;
-				}
-				if (nodeToRemove->rightSon) {
-					nodeToRemove->rightSon->father = nodeToRemove;
-				}
-				return;
-			} else {
-				if (nodeStatus == RIGHT_SON) {
-					nodeToRemove->father->rightSon = son;
-				} else {
-					nodeToRemove->father->leftSon = son;
-				}
-				son->father = nodeToRemove->father;
-				nodeToRemove->leftSon = NULL;
-				nodeToRemove->rightSon = NULL;
-				delete nodeToRemove;
-				son->father->correctNode();
-				return;
-			}
+	}
+	//TWO SONS
+	if (sonsStatus == TWO_SONS) {
+		AVLNode* following = nodeToRemove->GetTheFollowingNode();
+		NodeStatus followingStatus = following->GetNodeStatus();
+		if (followingStatus == RIGHT_SON) {
+			following->father->rightSon = following->rightSon;
 		}
-		//TWO SONS
-		if (sonsStatus == TWO_SONS) {
-			AVLNode* following = nodeToRemove->GetTheFollowingNode();
-			NodeStatus followingStatus = following->GetNodeStatus();
-			if (followingStatus == RIGHT_SON) {
-				following->father->rightSon = following->rightSon;
-			}
-			if (followingStatus == LEFT_SON) {
-				following->father->leftSon = following->rightSon;
-			}
-			if (following->rightSon) {
-				following->rightSon->father = following->father;
-			}
+		if (followingStatus == LEFT_SON) {
+			following->father->leftSon = following->rightSon;
+		}
+		if (following->rightSon) {
+			following->rightSon->father = following->father;
+		}
+
+		if (following->data.GetMinTask()) {
+			((following->data.GetMinTask())->changeAVLNode(
+					&(nodeToRemove->data)));
+		}
+		if (following->data.GetMaxTask()) {
+			((following->data.GetMaxTask())->changeAVLNode(
+					&(nodeToRemove->data)));
+
 			nodeToRemove->data = following->data;
+
 			if (following->rightSon) {
 				following->rightSon->correctNode();
 			} else {
 				following->father->correctNode();
 			}
+
 			following->rightSon = NULL;
 			delete following;
 		}
 		return;
 	}
-    
-	/*return true if the data is at the tree, other false*/
-	bool dataIsIn(const T& data) {
-		AVLNode elementToSearch(data);
-		if (*this == elementToSearch) {
-			return true;
-		}
-		if (*this < elementToSearch) {
-			if (rightSon != NULL) {
-				return rightSon->dataIsIn(data);
-			} else {
-				return false;
-			}
+}
+
+/*return true if the data is at the tree, other false*/
+bool dataIsIn(const T& data) {
+	AVLNode elementToSearch(data);
+
+	if (*this == elementToSearch) {
+		return true;
+	}
+	if (*this < elementToSearch) {
+		if (rightSon != NULL) {
+			return rightSon->dataIsIn(data);
 		} else {
-			if (leftSon != NULL) {
-				return leftSon->dataIsIn(data);
-			} else {
-				return false;
-			}
+			return false;
+		}
+	} else {
+		if (leftSon != NULL) {
+			return leftSon->dataIsIn(data);
+		} else {
+			return false;
 		}
 	}
-    
-	/*gets nodes and subs nodes into a pre-allocated array*/
-	void GetNodeIntoArray(T* array, int& i) {
-		if (leftSon) {
-			leftSon->GetNodeIntoArray(array, i);
-		}
-        
+}
+
+/*gets nodes and subs nodes into a pre-allocated array*/
+void GetNodeIntoArray(T* array, int& i) {
+	if (leftSon) {
+		leftSon->GetNodeIntoArray(array, i);
+	}
+
+	array[i] = data;
+	i++;
+	if (rightSon) {
+		rightSon->GetNodeIntoArray(array, i);
+	}
+	return;
+}
+
+/*gets how many nodes in the range there is at the tree*/
+int countInRange(const T& min, const T& max) {
+	AVLNode nodeMin(min);
+	AVLNode nodeMax(max);
+	int countLeft = 0;
+	int countRight = 0;
+	if (*this > nodeMin && leftSon != NULL) {
+		countLeft = leftSon->countInRange(min, max);
+	}
+	if (*this < nodeMax && rightSon != NULL) {
+		countRight = rightSon->countInRange(min, max);
+	}
+	if ((*this > nodeMin && *this < nodeMax) || *this == nodeMin
+			|| *this == nodeMax) {
+		return countLeft + countRight + 1;
+	}
+	return countLeft + countRight;
+}
+
+/*gets data of the following node*/
+T& GetFollowingData() {
+	AVLNode* following = this->GetTheFollowingNode();
+	return following->data;
+}
+
+/*gets all the nodes that are at the range and at the tree*/
+void GetRangeInArray(T* array, int& i, const T& min, const T& max) {
+	AVLNode nodeMin(min);
+	AVLNode nodeMax(max);
+	if (*this > nodeMin && leftSon != NULL) {
+		leftSon->GetRangeInArray(array, i, min, max);
+	}
+	if ((*this > nodeMin && *this < nodeMax) || *this == nodeMin
+			|| *this == nodeMax) {
 		array[i] = data;
 		i++;
-		if (rightSon) {
-			rightSon->GetNodeIntoArray(array, i);
-		}
-		return;
 	}
-    
-	/*gets how many nodes in the range there is at the tree*/
-	int countInRange(const T& min, const T& max) {
-		AVLNode nodeMin(min);
-		AVLNode nodeMax(max);
-		int countLeft = 0;
-		int countRight = 0;
-		if (*this>nodeMin && leftSon != NULL ) {
-			countLeft = leftSon->countInRange(min, max);
-		}
-		if (*this<nodeMax && rightSon != NULL) {
-			countRight = rightSon->countInRange(min, max);
-		}
-		if ((*this>nodeMin && *this<nodeMax)|| *this==nodeMin || *this==nodeMax) {
-			return countLeft + countRight + 1;
-		}
-		return countLeft + countRight;
+	if (*this < nodeMax && rightSon != NULL) {
+		rightSon->GetRangeInArray(array, i, min, max);
 	}
-    
-	/*gets data of the following node*/
-	T& GetFollowingData() {
-		AVLNode* following = this->GetTheFollowingNode();
-		return following->data;
-	}
-    
-	/*gets all the nodes that are at the range and at the tree*/
-	void GetRangeInArray(T* array, int& i, const T& min, const T& max) {
-		AVLNode nodeMin(min);
-		AVLNode nodeMax(max);
-		if (*this>nodeMin && leftSon != NULL) {
-			leftSon->GetRangeInArray(array, i, min, max);
-		}
-		if ((*this>nodeMin && *this<nodeMax)|| *this==nodeMin || *this==nodeMax) {
-			array[i] = data;
-			i++;
-		}
-		if (*this<nodeMax  && rightSon != NULL) {
-			rightSon->GetRangeInArray(array, i, min, max);
-		}
-        
-		return;
-	}
-    
-    
+
+	return;
+}
+
 };
 
 template<class T, class CmpFunc>
 class AVLTree {
 private:
-	AVLNode<T, CmpFunc>* root;
-	int size;
-	CmpFunc comperInt;
+AVLNode<T, CmpFunc>* root;
+int size;
+CmpFunc comperInt;
 public:
-	//Default constructor: empty tree
-	AVLTree() :
-    root(NULL), size(0) {
+//Default constructor: empty tree
+AVLTree() :
+		root(NULL), size(0) {
+}
+
+//constructor
+AVLTree(const T& newData) :
+		size(1) {
+	//TODO
+	try {
+		root = new AVLNode<T, CmpFunc>(newData);
+	} catch (...) {
 	}
-    
-	//constructor
-	AVLTree(const T& newData) :
-    size(1) {
-		//TODO
-		try {
-			root = new AVLNode<T, CmpFunc>(newData);
-		} catch (...) {
+}
+
+//D'tor
+~AVLTree() {
+	delete root;
+	root = NULL;
+}
+
+/*insert data to the tree*/
+AVLTreeResult insert(const T& data) {
+	if (root == NULL) {
+		root = new AVLNode<T, CmpFunc>(data);
+		if (data.GetMinTask() != NULL) {
+			data.GetMinTask()->changeAVLNode(&(root->getData()));
 		}
-	}
-    
-	//D'tor
-	~AVLTree() {
-		delete root;
-		root = NULL;
-	}
-    
-	/*insert data to the tree*/
-	AVLTreeResult insert(const T& data) {
-		if (root == NULL) {
-			root = new AVLNode<T, CmpFunc>(data);
-			size++;
-			return AVL_TREE_SUCCESS;
+		if (data.GetMaxTask() != NULL) {
+			data.GetMaxTask()->changeAVLNode(&(root->getData()));
 		}
-		if (root->dataIsIn(data)) {
-			return AVL_TREE_DATA_ALREADY_EXIST;
-		}
-		root->insertToNode(data);
+
 		size++;
 		return AVL_TREE_SUCCESS;
 	}
-    
-	/* assuming data in the tree.
-	 * gets a data copy of given element's data in tree.
-	 */
-	T Find(const T& data) const {
-		assert(root!=NULL && root->dataIsIn(data));
-		return root->FindInNode(data);
+	if (root->dataIsIn(data)) {
+		return AVL_TREE_DATA_ALREADY_EXIST;
 	}
-    
-	/*delete data from the tree*/
-	AVLTreeResult Remove(const T& dataToRemove) {
-		if (!root) {
-			return AVL_TREE_DATA_NOT_EXIST;
-		}
-		if (!root->dataIsIn(dataToRemove)) {
-			return AVL_TREE_DATA_NOT_EXIST;
-		}
-		if (size == 1) {
-			delete root;
-			root = NULL;
-			size--;
-			return AVL_TREE_SUCCESS;
-		}
-		root->removeFromNode(dataToRemove);
+	root->insertToNode(data);
+	size++;
+	return AVL_TREE_SUCCESS;
+}
+
+/* assuming data in the tree.
+ * gets a data copy of given element's data in tree.
+ */
+T* Find(const T& data) const {
+	assert(root!= NULL);
+	// && root->dataIsIn(data));
+	return root->FindInNode(data);
+}
+
+/*delete data from the tree*/
+AVLTreeResult Remove(const T& dataToRemove) {
+	if (!root) {
+		return AVL_TREE_DATA_NOT_EXIST;
+	}
+	if (!root->dataIsIn(dataToRemove)) {
+		return AVL_TREE_DATA_NOT_EXIST;
+	}
+	if (size == 1) {
+		delete root;
+		root = NULL;
 		size--;
 		return AVL_TREE_SUCCESS;
 	}
-    
-	/*count the number of nodes that in the range and at the tree*/
-	int countNodesInRange(const T& min, const T& max) {
-		int count=0;
-		if (root) {
-			count= root->countInRange(min, max);
-		}
-		return count;
+	root->removeFromNode(dataToRemove);
+	size--;
+	return AVL_TREE_SUCCESS;
+}
+
+/*count the number of nodes that in the range and at the tree*/
+int countNodesInRange(const T& min, const T& max) {
+	int count = 0;
+	if (root) {
+		count = root->countInRange(min, max);
 	}
-    
-	/*gets a tree into a pre-allocated array.*/
-	void GetTreeInArray(T* array) const {
-		int i = 0;
-		if (root) {
-			root->GetNodeIntoArray(array, i);
-		}
+	return count;
+}
+
+/*gets a tree into a pre-allocated array.*/
+void GetTreeInArray(T* array) const {
+	int i = 0;
+	if (root) {
+		root->GetNodeIntoArray(array, i);
 	}
-    
-	int GetTreeSize() {
-		return size;
+}
+
+int GetTreeSize() {
+	return size;
+}
+
+//assuming the tree  not empty.
+T GetMinimum() {
+	return root->GetMinimumData();
+}
+
+//assuming the tree  not empty.
+T GetMaximum() {
+	return root->GetMaximumData();
+}
+
+/*gets matched nodes into a pre-allocated array*/
+void GetNodesInRange(T* array, const T& min, const T& max) const {
+	int i = 0;
+	if (root) {
+		root->GetRangeInArray(array, i, min, max);
 	}
-    
-	//assuming the tree  not empty.
-	T GetMinimum(){
-		return root->GetMinimumData();
+}
+
+/*return true if data in the tree, other false*/
+bool DataInTree(T& data) {
+	if (root) {
+		return root->dataIsIn(data);
 	}
-    
-	//assuming the tree  not empty.
-	T GetMaximum(){
-		return root->GetMaximumData();
-	}
-    
-	/*gets matched nodes into a pre-allocated array*/
-	void GetNodesInRange(T* array, const T& min, const T& max) const {
-		int i = 0;
-		if (root) {
-			root->GetRangeInArray(array, i, min, max);
-		}
-	}
-    
-	/*return true if data in the tree, other false*/
-	bool DataInTree(T& data){
-		if(root){
-			return root->dataIsIn(data);
-		}
-		return false;
-	}
-    
-    
+	return false;
+}
+
 };
 
 #endif /* AVLTREE_H_ */
