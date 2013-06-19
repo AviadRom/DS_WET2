@@ -21,64 +21,89 @@ private:
 	FuncObj FObj;
     
 	/*Replace 2 elements in the array*/
-	void Swap(int i, int j, string type) {
+	void Swap(int i, int j) {
+		if ((i > 0 && i <= numberOfElements) && (j > 0 && j <= numberOfElements)) {
+			FObj.SetIndex(array+i, j);
+			FObj.SetIndex(array+j, i);
+			T temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+			FObj.SetIndex(array+i, i);
+			FObj.SetIndex(array+j, j);
+            
+            // array[i].SetIndex(j);
+            // array[j].SetIndex(i);
+            
+		}
+	}
+	
+	void SwapWithoutIndexChange(int i, int j) {
 		if ((i > 0 && i <= numberOfElements)
             && (j > 0 && j <= numberOfElements)) {
 			T temp = array[i];
 			array[i] = array[j];
 			array[j] = temp;
-			if (type.compare("min")) {
-				array[i].SetMinHeapIndex(j);
-				array[j].SetMinHeapIndex(i);
-			} else {
-				array[i].SetMaxHeapIndex(j);
-				array[j].SetMaxHeapIndex(i);
-			}
-            
 		}
 	}
     
 	/*Adds element to the Heap*/
-	void InsertElement(T data,string type) {
+	void InsertElement(T data,bool changeIndex) {
 		array[numberOfElements + 1] = data;
 		numberOfElements++;
-		MakeSiftUp(numberOfElements,type);
+		MakeSiftUp(numberOfElements,changeIndex);
 		ChangeSize();
 	}
     
 	/*  Sift down the element in the array at index i
 	 *  Input: i - the index where the data to sift down*/
-	void MakeSiftDown(int i,string type) {
+	void MakeSiftDown(int i, bool changeIndex) {
 		if (i < 1) {
 			return;
 		}
 		if (2 * i + 1 <= numberOfElements) {
 			if (FObj.Compare(array[2 * i], array[i])
-                || FObj.Compare(array[2 * i + 1], array[i])) {
+					|| FObj.Compare(array[2 * i + 1], array[i])) {
 				if (FObj.Compare(array[2 * i], array[2 * i + 1])) {
-					Swap(i, 2 * i,type);
-					MakeSiftDown(2 * i,type);
+					if (changeIndex) {
+						Swap(i, 2 * i);
+					} else {
+						SwapWithoutIndexChange(i, 2 * i);
+					}
+					MakeSiftDown(2 * i, changeIndex);
 				} else {
-					Swap(i, 2 * i + 1,type);
-					MakeSiftDown(2 * i + 1,type);
+					if (changeIndex) {
+						Swap(i, 2 * i + 1);
+					} else {
+						SwapWithoutIndexChange(i, 2 * i + 1);
+					}
+					MakeSiftDown(2 * i + 1, changeIndex);
 				}
 			}
 		} else if (2 * i <= numberOfElements) {
 			if (FObj.Compare(array[2 * i], array[i])) {
-				Swap(i, 2 * i,type);
+				if (changeIndex) {
+					Swap(i, 2 * i);
+				} else {
+					SwapWithoutIndexChange(i, 2 * i);
+				}
 			}
 		}
 	}
     
 	/*  Sift up the element in the array at index i
 	 *  Input: i - the index where the data to sift up*/
-	void MakeSiftUp(int i,string type) {
+	void MakeSiftUp(int i,bool changeIndex) {
 		if ((i < 2) || (i > numberOfElements)) {
 			return;
 		}
 		if (FObj.Compare(array[i], array[i / 2])) {
-			Swap(i, i / 2,type);
-			MakeSiftUp(i / 2,type);
+			if (changeIndex){
+                Swap(i, i / 2);
+            }
+            else {
+                SwapWithoutIndexChange(i,i/2);
+            }
+            MakeSiftUp(i / 2,changeIndex);
 		}
 	}
     
@@ -116,7 +141,14 @@ public:
 		delete[] array;
 	}
     
-	void MakeHeap(T* myArray, int n,string type) {
+    T& getElement(int index) const{
+		if (index>0 && index<=numberOfElements){
+			return array[index];
+		}
+		return array[1];//if the index is out of range, return the first element.
+	}
+    
+	void MakeHeap(T* myArray, int n) {
 		if (n == 0 || n == 1) {
 			size = 4;
 		} else {
@@ -126,49 +158,62 @@ public:
 		array = new T[size];
 		for (int i = 1; i <= numberOfElements; i++) {
 			array[i] = myArray[i - 1];
+			FObj.SetIndex(array + i, i);
 		}
 		for (int i = numberOfElements / 2; i > 0; --i) {
-			MakeSiftDown(i,type);
+			MakeSiftDown(i,true);
 		}
+
 	}
     
-	void Insert(T data,string type) {
-		InsertElement(data,type);
+	void Insert(T data) {
+		InsertElement(data,true);
 	}
 	/*Removes The element in index at heap of type min or max.*/
-	void RemoveElement(int index, string type) {
-		Swap(index, numberOfElements, type);
+	void RemoveElement(int index) {
+		if (index == -1) {
+			index = numberOfElements;
+		}
+		Swap(index, numberOfElements);
 		numberOfElements--;
-		MakeSiftDown(index,type);
+		MakeSiftDown(index,true);
 		ChangeSize();
 	}
     
 	/*Delete the biggest element at the Heap*/
-	T RemoveMaxElement() {
+	T RemoveMaxElement(bool changeIndex) {
 		T ret = array[1];
-		Swap(1, numberOfElements,"max");
+		if (changeIndex) {
+			Swap(1, numberOfElements);
+		} else {
+			SwapWithoutIndexChange(1, numberOfElements);
+		}
 		numberOfElements--;
-		MakeSiftDown(1,"max");
+		if (changeIndex) {
+			MakeSiftDown(1, true);
+		} else {
+			MakeSiftDown(1, false);
+		}
 		return ret;
 	}
     
 	/*  Change a key or any other data (of type int) in an object at the index i
 	 *  Input: i - the index where the object to change
 	 *  	   change - how big is the change*/
-	void ChangeKeyValue(int i, int change,string type) {
+	void ChangeKeyValue(int i, int change) {
 		if ((i < 1) || (i > numberOfElements)) {
 			return;
 		}
 		FObj.AddVal(array[i], change);
 		if (change >= 0) {
-			MakeSiftUp(i,type);
+			MakeSiftUp(i);
 		} else {
-			MakeSiftDown(i,type);
+			MakeSiftDown(i,true);
 		}
 	}
     
 	/*  gets copy of object with the maximum value*/
-	T FindMax() {
+	T& FindMax() {
 		return array[1];
 	}
     
@@ -182,8 +227,9 @@ public:
 		return size;
 	}
     
+    
     //Gets the K Biggest nodes at array.
-	void GetKBiggest(Heap<T, FuncObj>& heap, T* arr, int k,string type) const {
+	void GetKBiggest(Heap<T, FuncObj>& heap, T* arr, int k) const {
 		if (k > numberOfElements) {
 			return;
 		}
@@ -191,13 +237,13 @@ public:
 		arr[0] = array[1];
 		while (i < k) {
 			if (2 * j + 1 <= numberOfElements) {
-				heap.InsertElement(array[2 * j],type);
-				heap.InsertElement(array[2 * j + 1],type);
+				heap.InsertElement(array[2 * j], false);
+				heap.InsertElement(array[2 * j + 1], false);
 			} else if (2 * j <= numberOfElements) {
-				heap.InsertElement(array[2 * j],type);
+				heap.InsertElement(array[2 * j], false);
 			}
-			arr[i] = heap.RemoveMaxElement();
-			j = FObj.GetIndex(arr[i]);
+			arr[i] = heap.RemoveMaxElement(false);
+			j = arr[i].GetIndex();
 			i++;
 		}
 	}
